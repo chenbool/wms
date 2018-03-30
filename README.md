@@ -36,10 +36,7 @@ https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
 
 ## 演示
 
-<video id="video" controls="" preload="none" poster="http://media.w3.org/2010/05/sintel/poster.png">
-      <source id="mp4" src="http://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
-      <p>Your user agent does not support the HTML5 Video element.</p>
-</video>
+<iframe src="http://www.56.com/iframe/MTQ5NzQxMDc5" width="320" height="270" frameborder="0" allowfullscreen=""></iframe>
 
 ![1](./demo/20171229163116.png)
 
