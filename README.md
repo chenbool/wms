@@ -6,10 +6,10 @@
 
 http://bool.yk.0zj.pw/index.php
 
-普通账号： admin/admin   
-
-管理员账号：bool/admin
-
+类型| 账号 | 密码
+---|---|---
+普通|admin | admin
+管理员|bool | admin
 
 
 
