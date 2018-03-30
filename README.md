@@ -35,7 +35,7 @@ https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
 
 
 ## 演示
-[![视频演示](http://001.img.pu.sohu.com.cn/group2/M08/EF/CB/MTAuMTAuODguODE=/5_16364ab9392g104BS56_149741079_7_3b/cut@m=resize,w=1000,h=980.jpg)](http://www.56.com/iframe/MTQ5NzQxMDc5)
+[![视频演示](https://asciinema.org/a/42383.png)](http://www.56.com/iframe/MTQ5NzQxMDc5)
 
 
 ![1](./demo/20171229163116.png)
