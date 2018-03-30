@@ -30,7 +30,7 @@ https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
 ## qq群：484043598
 
 <div  align="center">    
-  <img src="./demo/alipay.png" width = "400" alt="图片名称" align=center />
+  <img src="./demo/alipay.png" width = "450" alt="支付宝" align=center />
 </div>
 
 
