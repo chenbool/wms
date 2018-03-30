@@ -11,21 +11,18 @@ http://bool.yk.0zj.pw/index.php
 管理员账号：bool/admin
 
 
-## 默认分支
-
-https://github.com/bool1993/xenon-wms
 
 
-#安装
+## 安装
 	
 	localhost/install.php
 
-#安装框架核心 vendor (可以跳过)
+## 安装框架核心 vendor (可以跳过)
 
 	composer install
 
 
-css js下载
+## css js下载
 
 https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
 
