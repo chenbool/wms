@@ -1,0 +1,96 @@
+	<!-- Imported scripts on this page -->
+<!-- 	<script src="__STATIC__/js/jquery-validate/jquery.validate.min.js"></script>
+	<link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+
+
+
+<form class="validate edit_from" novalidate="novalidate">
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-1" class="control-label">员工编号</label>
+				<input type="hidden" name="id" value="{$info.id}">
+				<input type="hidden" name="sn" value="{$info.sn}">
+				<input type="text" class="form-control" name="sn" placeholder="员工编号" value="{$info.sn}" disabled="disabled">
+			</div>	
+		</div>
+		
+		<div class="col-md-6">
+			
+			<div class="form-group">
+				<label class="control-label">员工姓名</label>
+				<input type="text" class="form-control" name="truename" placeholder="员工姓名" value="{$info.truename}">
+			</div>	
+		
+		</div>
+	</div>
+
+    <div class="row">   
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">角色</label>
+                <select class="form-control" name="role">
+                        <option value="0" >默认</option>
+                        {volist name='role' id='vo'}
+                        <option value="{$vo.id}" {eq name="info.role" value="$vo.id"} selected="selected" {/eq}>{$vo.name}</option>
+                        {/volist}
+                </select>  
+            </div>
+        </div>        
+    </div>
+
+    <div class="row">   
+<!-- 		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">登录账户</label>
+                <input type="text" class="form-control" name="username" placeholder="登录账户" value="{$info.username}">
+			</div>
+		</div> -->
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">登录密码</label>
+                <input type="password" class="form-control" name="password" placeholder="密码" value="{$info.password}">
+            </div>
+        </div>        
+    </div>
+
+    <div class="row">   
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">员工状态</label>
+                <select class="form-control" name="status">
+                    <option value="0" {eq name="info.status" value="0"} selected="selected" {/eq} >正常</option>
+                    <option value="1" {eq name="info.status" value="1"} selected="selected" {/eq} >废弃</option>
+                </select>  
+			</div>
+		</div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">公司</label>
+                <select class="form-control" name="company">
+                        <option value="默认" >默认</option>
+                        {volist name='company' id='vo'}
+                        <option value="{$vo.id}" {eq name="info.company" value="$vo.id"} selected="selected" {/eq} >{$vo.name}</option>
+                        {/volist}
+                </select>  
+            </div>
+        </div>        
+    </div>
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group no-margin">
+				<label for="field-7" class="control-label">备注</label>
+				
+				<textarea class="form-control autogrow" name="desc" placeholder="备注" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;">{$info.desc}</textarea>
+			</div>	
+		</div>
+	</div>
+
+	
+</form>

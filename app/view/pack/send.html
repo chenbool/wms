@@ -1,0 +1,310 @@
+{layout name="layout" /}
+
+<script src="__STATIC__/js/avalon.js"></script>
+<script src="__STATIC__/js/jquery-1.11.1.min.js"></script>
+<script src="__STATIC__/js/jQuery.print.js"></script>
+
+<div class="page-title">  
+    
+    <div class="breadcrumb-env pull-left">
+        
+        <ol class="breadcrumb bc-1">
+            <li>
+                <a href="{:url('Order/index')}"><i class="fa-home"></i>首页</a>
+            </li>
+            <li>
+                <a href="">发货管理</a>
+             </li>
+            <li class="active">
+                <strong>理货任务</strong>
+            </li>
+        </ol>
+                    
+    </div>       
+</div>  
+
+
+
+<div class="row">
+                <div class="col-md-12">
+                
+
+<!-- ******************************************************************************************************** -->                        
+
+
+            
+            <!-- Removing search and results count filter -->
+            <div class="panel panel-default" ms-controller="app">
+
+                <div class="panel-heading btn-toolbar">
+                    <h3 class="panel-title">出库单详情</h3>
+                </div>
+
+
+                <div class="panel-body"  >
+
+                    <!-- 出单 -->              
+                    <div style="padding-bottom:10px;">
+                        <div class="btn-toolbar row">
+
+                            <form class="form-inline col-xs-12" style="margin-bottom:10px;" class="search-tool">
+                                <span class="col-xs-4">
+                                    <label class="control-label">出库单号：</label>   
+                                    <input type="text" class="form-control" 
+                                    placeholder="出库单号" 
+                                    :attr="{value:@info.sn}" 
+                                    :on-change="getSn()"
+                                    :duplex="@info.sn" > 
+                                </span>
+                                
+                                <span class="col-xs-8">
+                                    <label class="control-label">订单编号：</label>      
+                                    <input type="text" class="form-control" placeholder="订单号" :attr="{value:@info.sn}">
+                                </span>
+
+                                <span class="col-xs-4" style="margin-top:10px;">
+                                    <label class="control-label">预估总额：</label>      
+                                    <input type="text" class="form-control" placeholder="总额" :attr="{value:@info.total+'.00'}">
+                                </span>
+
+                                <span class="col-xs-8" style="margin-top:10px;">
+                                    <label class="control-label">实际总额：</label>      
+                                    <input type="text" class="form-control" placeholder="总额" :attr="{value:@info.total+'.00'}">
+                                </span> 
+
+                                <span class="col-xs-4" style="margin-top:10px;">
+                                    <label class="control-label">实际运费：</label>      
+                                    <input type="text" class="form-control" placeholder="实际运费" value="0">
+                                </span>  
+
+                                <span class="col-xs-8" style="margin-top:10px;">
+                                    <label class="control-label">配送方式：</label>      
+                                    <input type="text" class="form-control" placeholder="配送方式" :attr="{value:@info.delivery}">
+                                </span>   
+
+                                <span class="col-xs-4" style="margin-top:10px;">
+                                    <label class="control-label">收件人&nbsp;&nbsp;&nbsp;：</label>      
+                                    <input type="text" class="form-control" placeholder="收件人" :attr="{value:@info.receiver_name}" >
+                                </span>    
+
+                                <span class="col-xs-8" style="margin-top:10px;">
+                                    <label class="control-label">收件电话：</label>      
+                                    <input type="text" class="form-control" placeholder="收件电话" :attr="{value:@info.receiver_phone}" >
+                                </span>                                                                             
+                            
+                            </form>
+                            
+                        </div>
+                        <!-- searach -->
+                        
+
+                        <table class="table table-bordered " if="info.total">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>产品名称</th>
+                                    <th>产品编号</th>
+                                    <th>产品单价</th>
+                                    <th>产品数量</th>
+                                    <th>小计</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody class="middle-align">
+
+                                    <tr role="row" :for="(k,el) in @info.list">
+                                        <td>
+                                            <label class="control-label" :text="@k+1"></label>
+                                        </td>
+                                        <td> 
+                                            <label class="control-label" :text="@el.name"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.sn"></label>
+                                        </td>                                    
+                                        <td>
+                                            <label class="control-label" :text="@el.price"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.num"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.count+'.00'"></label>
+                                        </td>
+                                    </tr>
+                                    <tr role="row" :if="info.total">
+                                        <td colspan="4"></td>
+                                        <td>总额</td>
+                                        <td>
+                                            <label class="control-label" :text="@info.total+'.00'"></label>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>     
+                    </div>
+
+
+                    <div class="pull-right col-xs-12" :if="info.total">
+                        <button class="btn btn-default btn-primary" :on-click="isPrint">
+                            <span class="fa-file-pdf-o"></span> 打印
+                        </button>
+                        <center> <b>[ 打印样本 ]</b> </center>
+                        <hr>
+                    </div>                    
+                    
+
+                    <!-- 打印出单 -->
+                    <div id="app" style="margin-top:50px;" :if="info.total">
+                        <div class="btn-toolbar row" >
+
+                            <form class="form-inline col-xs-8" >
+                                <span class="col-xs-12">
+                                    <label class="control-label">出库单号：</label>
+                                    <label class="control-label" :text="@info.sn"></label>      
+                                </span>
+                                
+                                <span class="col-xs-12">
+                                    <label class="control-label">订单编号：</label>   
+                                    <label class="control-label" :text="@info.sn">：</label>      
+                                </span>
+
+                                <span class="col-xs-4" >
+                                    <label class="control-label">预估总额：</label>  
+                                    <label class="control-label" :text="@info.total+'.00'"></label>     
+                                </span>
+
+                                <span class="col-xs-8" >
+                                    <label class="control-label">实际总额：</label>      
+                                    <label class="control-label" :text="@info.total+'.00'"></label>  
+                                </span> 
+
+                                <span class="col-xs-4" >
+                                    <label class="control-label">实际运费：</label>      
+                                    <label class="control-label" :text="@info.total+'.00'"></label>  
+                                </span>  
+
+                                <span class="col-xs-8">
+                                    <label class="control-label">配送方式：</label>  
+                                    <label class="control-label" :text="@info.delivery"></label>      
+                                </span>   
+
+                                <span class="col-xs-4" >
+                                    <label class="control-label">收件人&nbsp;&nbsp;&nbsp;：</label>  
+                                    <label class="control-label" :text="@info.receiver_name"></label>      
+                                </span>    
+
+                                <span class="col-xs-8" >
+                                    <label class="control-label">收件电话：</label>     
+                                    <label class="control-label" :text="@info.receiver_phone"></label>      
+                                </span>                                                                             
+                            
+                            </form>
+                            <div class="col-xs-4">
+                                <img :attr="{src:barcode}" class="pull-right">
+                            </div>
+                            
+                        </div>
+                        <!-- searach -->
+                        
+
+                        <table class="table table-bordered " >
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>产品名称</th>
+                                    <th>产品编号</th>
+                                    <th>产品单价</th>
+                                    <th>产品数量</th>
+                                    <th>小计</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody class="middle-align">
+
+                                    <tr role="row" :for="(k,el) in @info.list">
+                                        <td>
+                                            <label class="control-label" :text="@k+1"></label>
+                                        </td>
+                                        <td> 
+                                            <label class="control-label" :text="@el.name"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.sn"></label>
+                                        </td>                                    
+                                        <td>
+                                            <label class="control-label" :text="@el.price"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.num"></label>
+                                        </td>
+                                        <td>
+                                            <label class="control-label" :text="@el.count+'.00'"></label>
+                                        </td>
+                                    </tr>
+                                    <tr role="row" :if="info.total">
+                                        <td colspan="4"></td>
+                                        <td>总额</td>
+                                        <td>
+                                            <label class="control-label" :text="@info.total+'.00'"></label>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table> 
+
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-xs-8">
+                                <div style="height:100px;width:100px;border:1px dashed #ccc;"></div>
+                            </div>
+                            <div class="col-xs-4" style="margin-top:30px;">
+                                <div class="form-group no-margin">
+                                    <label class="control-label">客服电话:</label>
+                                    <label class="control-label">400-800-1234</label>
+                                </div>
+                                <div class="form-group no-margin">
+                                    <label class="control-label">微信:</label>
+                                    <label class="control-label">400-800-1234</label>
+                                </div>
+                                <div class="form-group no-margin">
+                                    <label class="control-label">邮箱:</label>
+                                    <label class="control-label">xenon@amin.com</label>
+                                </div> 
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <br>
+
+            </div>
+
+<script>
+ var vm = avalon.define({
+    $id: "app",
+    barcode:"",
+    info: {
+        sn:'',
+        receiver_name:'',
+        receiver_phone:'',
+        delivery:'',
+        list:{},
+        total:0
+    },
+    getSn:function(){
+        // this.info.sn = 'AD888013016NY';
+        this.getInfo();
+    },
+    getInfo:function(){
+        var _this = this;
+        $.post("{:url('/Pack/getSn')}", {"sn":this.info.sn},function(data){
+            data.list =JSON.parse(data.list);
+            _this.info = data;
+            // console.log(data.list);
+            _this.barcode = "{:trim(url('/Instorage/barcode/sn/'),'.html') }"+_this.info.sn;
+            _this.getBarcode();
+        }, "json");
+    },
+    isPrint:function(){
+        $("#app").print();
+    }
+});
+
+</script>

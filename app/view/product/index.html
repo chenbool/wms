@@ -1,0 +1,366 @@
+{layout name="layout" /}
+
+    <!-- Imported scripts on this page -->
+    <script src="__STATIC__/js/rwd-table/js/rwd-table.min.js"></script>
+    <script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+    <!-- Imported scripts on this page -->
+    <script src="__STATIC__/js/datatables/dataTables.bootstrap.js"></script>
+    <script src="__STATIC__/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
+    <script src="__STATIC__/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
+
+    <script src="__STATIC__/js/table-export/xlsx.core.min.js"></script>
+    <script src="__STATIC__/js/table-export/blob.js"></script>
+    <script src="__STATIC__/js/table-export/FileSaver.min.js"></script>
+    <script src="__STATIC__/js/table-export/tableexport.js"></script>
+
+
+<div class="page-title">  
+    
+    <div class="breadcrumb-env pull-left">
+        
+        <ol class="breadcrumb bc-1">
+            <li>
+                <a href="{:url('Product/index')}"><i class="fa-home"></i>首页</a>
+            </li>
+            <li>
+                <a href="">基本设置</a>
+             </li>
+            <li class="active">
+                <strong>产品管理</strong>
+            </li>
+        </ol>
+                    
+    </div>       
+</div>
+
+
+
+<div class="row">
+                <div class="col-md-12">
+                
+
+<!-- ******************************************************************************************************** -->                        
+
+
+            
+            <!-- Removing search and results count filter -->
+            <div class="panel panel-default">
+                <div class="panel-heading btn-toolbar">
+                    <!-- <h3 class="panel-title">员工列表</h3> -->
+                    <div class="btn-group focus-btn-group">
+                        <button class="btn btn-default btn-primary" onclick="showAjaxModal();">
+                            <span class="fa-plus"></span> 添 加
+                        </button>
+                    </div>
+
+                    <div class="btn-group dropdown-btn-group pull-right">
+                        
+                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">过滤某列数据
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="checkbox-row">
+                                <div class="cbr-replaced cbr-checked">
+                                    <div class="cbr-input">
+                                        <input type="checkbox" name="toggle-id916bcee584545-col-1" id="toggle-id916bcee584545-col-1" value="id916bcee584545-col-1" class="cbr cbr-done"></div>
+                                    <div class="cbr-state">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <label for="toggle-id916bcee584545-col-1">用户名</label>
+                            </li>
+                        </ul>
+                        <button class="btn btn-default" onClick ="$('.table').tableExport({formats:['xlsx','xls','csv','txt']})">导出</button>
+                    </div>                    
+
+                </div>
+                <div class="panel-body">
+                    
+
+        
+    
+
+                    <!-- searach -->
+                    <div class="btn-toolbar">
+
+                        <form class="form-inline" style="margin-bottom:15px;" class="search-tool">
+                            <span>
+                                <label class="control-label">产品名称</label>   
+                                <input type="text" class="form-control" placeholder="产品名称" name="name" value="{$Request.get.name}"> 
+                            </span>
+                            
+                            <span style="margin-left: 15px;">
+                                <label class="control-label">产品编号</label>      
+                                <input type="text" class="form-control" placeholder="产品编号" name="sn" value="{$Request.get.sn}">
+                            </span>
+
+                            <span style="margin-left: 15px;">
+                                <label class="control-label">产品状态</label>
+                                <select class="form-control" name="status">
+                                    <option value="" 
+                                        {eq name="Request.get.status" value=" "} selected="selected" {/eq}
+                                    >全部</option>
+                                    <option value="0" 
+                                        {eq name="Request.get.status" value="0"} selected="selected" {/eq}
+                                    >正常</option>
+                                    <option value="1" 
+                                        {eq name="Request.get.status" value="1"} selected="selected" {/eq}
+                                    >废弃</option>
+                                </select>   
+                            </span>
+
+                            <span style="margin-left: 15px;">
+                                <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">
+                                    <span class="fa-search"></span> 搜 索
+                                </button> 
+                            </span>
+                        
+                        </form>
+                        
+                    </div>
+                    <!-- searach -->
+
+
+                    <script type="text/javascript">
+                    jQuery(document).ready(function($)
+                    {
+                        $("#example-2").dataTable({
+                            dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                            dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
+                            aoColumns: [
+                                {bSortable: false},
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                {bSortable: false}
+                            ],
+                        });
+                        
+                        // Replace checkboxes when they appear
+                        var $state = $("#example-2 thead input[type='checkbox']");
+                        
+                        $("#example-2").on('draw.dt', function()
+                        {
+                            cbr_replace();
+                            
+                            $state.trigger('change');
+                        });
+                        
+                        // Script to select all checkboxes
+                        $state.on('change', function(ev)
+                        {
+                            var $chcks = $("#example-2 tbody input[type='checkbox']");
+                            
+                            if($state.is(':checked'))
+                            {
+                                $chcks.prop('checked', true).trigger('change');
+                            }
+                            else
+                            {
+                                $chcks.prop('checked', false).trigger('change');
+                            }
+                        });
+                    });
+                    </script>
+                    
+
+                    <table class="table table-bordered table-striped" id="example-2">
+                        <thead>
+                            <tr>
+                                <th class="no-sorting">
+                                    <input type="checkbox" class="cbr">
+                                </th>
+                                <!-- <th>ID</th> -->
+                                <th>编号</th>
+                                <th>产品名称</th>
+                                <th>类别</th>
+                                <th>单位</th>
+                                <th>价格</th>
+                                <th>仓库</th>
+                                <th>库位</th>
+                                <th>供应商</th>
+                                <th>客户</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody class="middle-align">
+                        
+                        {volist name='list' id='user'}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="cbr">
+                                </td>
+                                <!-- <td> {$user.id} </td> -->
+                                <td> {$user.sn} </td>
+                                <td> {$user.name} </td>
+                                <td> {$user.category} </td>
+                                <td> {$user.unit} </td>
+                                <td> {$user.price} </td>
+                                <td> {$user.storage} </td>
+                                <td> {$user.location} </td>
+                                <td> {$user.supplier} </td>
+                                <td> {$user.customer} </td>
+                                <td> {$user.status==0?'正常':'废弃'} </td>
+                                <td>
+                                    <a href="javascript:;" 
+                                        class="btn btn-secondary btn-sm btn-icon icon-left" 
+                                        onclick="editAjaxModal('{:url('/Product/edit/id/'.$user->id)}')" >
+                                        编辑
+                                    </a>
+                                    
+                                    <a ref="javascript:;" class="btn btn-danger btn-sm btn-icon icon-left" onclick="del('{$user.id}')">
+                                        删除
+                                    </a>
+
+                                </td>
+                            </tr>
+                        {/volist}
+
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共{:count( $list ) } 行数据</div></div>
+                        <div class="col-xs-6">
+                            <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
+                                {$list->render()}
+                            </div>
+                        </div>
+                    </div>                  
+
+                </div>
+            </div>
+
+
+
+<!-- *********************************************************************************************************************** -->
+
+
+    <!-- Modal add (Ajax Modal)-->
+    <div class="modal fade " id="modal-add">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">添加产品</h4>
+                </div>
+                
+                <div class="modal-body">
+                    Content is loading...
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="add_from()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal edit (Ajax Modal)-->
+    <div class="modal fade " id="modal-edit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">编辑产品</h4>
+                </div>
+                
+                <div class="modal-body">
+                    Content is loading...
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="edit_from()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+<script type="text/javascript">
+    //add
+    function showAjaxModal(){
+        jQuery('#modal-add').modal('show', {backdrop: 'static'});
+        
+        jQuery.ajax({
+            url: "{:url('Product/create')}",
+            success: function(response)
+            {
+                jQuery('#modal-add .modal-body').html(response);
+            }
+        });
+    }
+
+    function add_from(){
+        var res = $(".add-form").serializeArray();
+
+        $.post("{:url('Product/save')}", res,function(data){
+            if( data.error>0 ){
+                toastr.error( data.msg );  
+            }else{
+                toastr.success( data.msg );  
+                jQuery('#modal-add').modal('hide');
+                location.reload();
+            }
+        }, "json");
+
+    }
+
+    //edit
+    function editAjaxModal(url){
+        jQuery('#modal-edit').modal('show', {backdrop: 'static'});
+        
+        jQuery.ajax({
+            url: url,
+            success: function(response)
+            {
+                jQuery('#modal-edit .modal-body').html(response);
+            }
+        });
+    }
+    function edit_from(){
+        var res = $(".edit_from").serializeArray();
+
+        $.post("{:url('Product/update')}", res,function(data){
+            if( data.error>0 ){
+                toastr.error( data.msg );  
+            }else{
+                toastr.success( data.msg );  
+                jQuery('#modal-edit').modal('hide');
+                location.reload();
+            }
+        }, "json");
+
+    }
+
+    //del
+    function del(id){
+        if( confirm("确定要删除吗？") ){
+            $.post("{:url('Product/delete')}", {id:id},function(data){
+                if( data.error>0 ){
+                    toastr.error( data.msg );  
+                }else{
+                    toastr.success( data.msg );  
+                    location.reload();
+                }
+            }, "json");
+        } 
+
+    }
+</script>

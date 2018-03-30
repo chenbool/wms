@@ -1,0 +1,94 @@
+	<!-- Imported scripts on this page -->
+<!-- 	<script src="__STATIC__/js/jquery-validate/jquery.validate.min.js"></script>
+	<link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+<form class="validate edit_from" novalidate="novalidate">
+
+	<div class="row">	
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品编号</label>
+				<input type="text" class="form-control" name="sn" placeholder="产品编号" value="{$info.sn}" disabled="disabled">
+				<input type="hidden" name="id" value="{$info.id}">
+			</div>	
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品名称</label>
+				<input type="text" class="form-control" name="name" placeholder="产品名称" value="{$info.name}" disabled="disabled">
+			</div>	
+		</div>
+	</div>
+
+
+	<div class="row">	
+		<div class="col-md-12">
+			<div class="form-group">
+				<label for="field-2" class="control-label">上架数量</label>
+				<input type="text" class="form-control" name="num" placeholder="上架数量" value="1">
+			总数量：{$info.num}
+			</div>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认仓库</label>
+                <select class="form-control" name="storage">
+                    {volist name='storage' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.storage" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认库位</label>
+                <select class="form-control" name="location">
+                    {volist name='location' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.location" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认货架</label>
+                <select class="form-control" name="shelve">
+                    {volist name='shelve' id='vo'}
+                    	<option value="{$vo.id}" {eq name="$info.shelve" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+		<?php
+			$shelve_list = $shelve[0];
+			$shelve_list = explode(',',$shelve_list->list) ;
+		?>
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认货位</label>
+                <select class="form-control" name="shelve_list">
+                    {volist name='$shelve_list' id='vo'}
+                    	<option value="{$vo}"  >{$vo}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group no-margin">
+				<label for="field-7" class="control-label">备注</label>
+				
+				<textarea class="form-control autogrow" name="desc" placeholder="备注" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;">{$info.desc}</textarea>
+			</div>	
+		</div>
+	</div>
+
+</form>

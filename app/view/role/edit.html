@@ -1,0 +1,158 @@
+{layout name="layout" /}
+
+<?php
+	$ids = explode(',', $info->ids);
+?>
+<div class="page-title">  
+    
+    <div class="breadcrumb-env pull-left">
+        
+        <ol class="breadcrumb bc-1">
+            <li>
+                <a href="{:url('Index/index')}"><i class="fa-home"></i>首页</a>
+            </li>
+            <li>
+                <a href="">角色管理</a>
+             </li>
+            <li class="active">
+                <strong>角色列表</strong>
+            </li>
+        </ol>
+                    
+    </div>       
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+<!-- ******************************************************************************************************** -->                       
+            
+        <!-- Removing search and results count filter -->
+        <div class="panel panel-default">
+
+            <div class="panel-heading btn-toolbar">
+                <h3 class="panel-title">角色管理</h3>
+                <!-- <div class="panel-options pull-right"> -->
+	                <div class="btn-toolbar pull-right">
+	                    <div class="btn-group focus-btn-group ">
+	                        <a href="{:url('Role/index')}" class="btn btn-default btn-primary">
+	                            <span class="fa-asterisk"></span>返回
+	                        </a>
+	                    </div>
+	                </div>
+                <!-- </div> -->
+            </div>
+
+            <div class="panel-body"></div>
+
+<form class="validate add-form" novalidate="novalidate">
+
+	<div class="row">	
+		<div class="col-md-12">
+			
+			<div class="form-group col-md-5">
+				<label for="field-2" class="control-label">角色名称</label>
+				<input type="text" class="form-control" name="name" placeholder="角色名称" value="{$info.name}">
+				<input type="hidden" name="id" value="{$info.id}">
+			</div>	
+		
+		</div>
+	</div>
+
+<!-- 	<div class="row">
+		<div class="col-md-12">
+			
+			<div class="form-group">
+                <label class="control-label">单位状态</label>
+                <select class="form-control" name="status">
+                    <option value="0"  >正常</option>
+                    <option value="1"  >废弃</option>
+                </select>  
+			</div>	
+		
+		</div> 
+    </div> -->
+
+	<div class="row">	
+		<div class="col-md-12">
+			
+			<div class="form-group col-md-12">
+				<label for="field-2" class="control-label pull-left">节点选择</label>
+				
+				<table class="table table-bordered table-striped">
+
+				{volist name='menu.father' id='vo'}
+					<tr>
+						<td width="50"><input type="checkbox" name="ids[]" value="{$vo.id}" 
+						<?php echo in_array($vo->id,$ids) ? ' checked="checked" ': null ; ?>
+						></td>
+						<td style="text-align:left;">{$vo.name}</td>
+					</tr>
+					<tr>					
+						<td width="50"></td>
+						<td style="text-align:left;">
+							{volist name='menu.child' id='vv'}
+								{if condition="$vv.pid eq $vo.id"}
+									<input type="checkbox" name="ids[]" value="{$vv.id}"
+										<?php echo in_array($vv->id,$ids) ? ' checked="checked" ': null ; ?>
+									>
+									{$vv.name}
+									&nbsp;&nbsp;&nbsp;&nbsp;
+								{else /}
+								{/if}
+							{/volist}
+						</td>
+					</tr>
+
+				{/volist}
+
+				</table>
+			</div>	
+
+		
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group col-md-10">
+				<label for="field-7" class="control-label">备注</label>
+				
+				<textarea class="form-control autogrow" name="desc" placeholder="备注" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;">{$info.desc}</textarea>
+			</div>	
+		</div>
+	</div>
+
+</form>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group col-md-5">
+	                <div class="btn-group focus-btn-group ">
+	                    <button class="btn btn-default btn-primary" onclick="add_from()">提交</button>
+	                </div>
+			</div>	
+		</div>
+	</div>
+
+		</div>
+	</div>
+</div>
+
+<script>
+
+    function add_from(){
+        var res = $(".add-form").serializeArray();
+
+        $.post("{:url('Role/update')}", res,function(data){
+            if( data.error>0 ){
+                toastr.error( data.msg );  
+            }else{
+                toastr.success( data.msg );  
+                location.href="{:url('Role/index')}";
+            }
+        }, "json");
+
+    }
+
+</script>
