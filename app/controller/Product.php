@@ -50,5 +50,9 @@ class Product extends Base
     public function delete($id){
         return $this->service->delete($id);
     }
-    
+
+    public function upload(){
+        return $this->service->upload();
+    }
+   
 }

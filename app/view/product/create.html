@@ -11,6 +11,81 @@
 		<div class="col-md-6">
 			<div class="form-group">
 				<label for="field-2" class="control-label">产品编号</label>
+				<input type="text" class="form-control" name="sn" placeholder="产品编号" value="{:uniqid()}">
+			</div>	
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品名称</label>
+				
+				<input type="text" class="form-control" name="name" placeholder="产品名称" >
+			</div>	
+		</div>
+
+		<div class="col-md-6">
+
+		<!--dom结构部分-->
+		<div id="uploader-demo"  style="display:block;">
+		    <!--用来存放item-->
+		    <div id="fileList" class="uploader-list"></div>
+		    <div id="filePicker" style="border:1px solid #ccc;width:130px;height:130px;float:right;"></div>
+		</div>
+
+		<style>
+			
+			.webuploader-pick,.webuploader-pick img{
+				display:block;
+				width:100px;
+				height:100px;
+				background:url(__STATIC__/images/upload.png);
+			}
+		</style>
+
+		<script src="__STATIC__/upload/webuploader.min.js"></script>
+		<script>
+
+			// 初始化Web Uploader
+			var uploader = WebUploader.create({
+
+			    // 选完文件后，是否自动上传。
+			    auto: true,
+
+			    // swf文件路径
+			    swf: '__STATIC__' + '/upload/Uploader.swf',
+
+			    // 文件接收服务端。
+			    server: "{:url('upload')}",
+
+			    // 选择文件的按钮。可选。
+			    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+			    pick: '#filePicker',
+
+			    // 只允许选择图片文件。
+			    accept: {
+			        title: 'Images',
+			        extensions: 'gif,jpg,jpeg,bmp,png',
+			        mimeTypes: 'image/*'
+			    }
+			});
+
+			// 文件上传成功，给item添加成功class, 用样式标记上传成功。
+			uploader.on( 'uploadSuccess', function( file,response ) {
+				// console.log(file);
+				console.log(response);
+				var tpl = '<img src=" __PUBLIC__/uploads/'+response+' "/>';
+				$('.webuploader-pick').html(tpl);
+			    // $( '#'+file.id ).addClass('upload-state-done');
+			});
+
+		</script>
+
+	</div>
+	
+
+
+
+<!-- 	<div class="row">	
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品编号</label>
 				
 				<input type="text" class="form-control" name="sn" placeholder="产品编号" value="{:uniqid()}">
 			</div>	
@@ -22,7 +97,7 @@
 				<input type="text" class="form-control" name="name" placeholder="产品名称" >
 			</div>	
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row">	
 		<div class="col-md-6">
