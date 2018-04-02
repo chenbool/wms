@@ -72,7 +72,7 @@
                                 <label for="toggle-id916bcee584545-col-1">用户名</label>
                             </li>
                         </ul> -->
-                        <button class="btn btn-default" onClick ="$('.table').tableExport({formats:['xlsx','xls','csv','txt']})">导出</button>
+                        <button class="btn btn-default" onClick ="exportFile()">导出</button>
                     </div>                    
 
                 </div>
@@ -144,58 +144,60 @@
 
 
                     <script type="text/javascript">
-                    jQuery(document).ready(function($)
-                    {
-                        $("#example-2").dataTable({
-                            dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
-                            dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
-                            aoColumns: [
-                                {bSortable: false},
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                {bSortable: false}
-                            ],
-                        });
+                    // jQuery(document).ready(function($)
+                    // {
+                    //     $("#example-2").dataTable({
+                    //         dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                    //         dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
+                    //         aoColumns: [
+                    //             {bSortable: false},
+                    //             null,
+                    //             null,
+                    //             null,
+                    //             null,
+                    //             null,
+                    //             null,
+                    //             null,
+                    //             {bSortable: false}
+                    //         ],
+                    //     });
                         
-                        // Replace checkboxes when they appear
-                        var $state = $("#example-2 thead input[type='checkbox']");
+                    //     // Replace checkboxes when they appear
+                    //     var $state = $("#example-2 thead input[type='checkbox']");
                         
-                        $("#example-2").on('draw.dt', function()
-                        {
-                            cbr_replace();
+                    //     $("#example-2").on('draw.dt', function()
+                    //     {
+                    //         cbr_replace();
                             
-                            $state.trigger('change');
-                        });
+                    //         $state.trigger('change');
+                    //     });
                         
-                        // Script to select all checkboxes
-                        $state.on('change', function(ev)
-                        {
-                            var $chcks = $("#example-2 tbody input[type='checkbox']");
+                    //     // Script to select all checkboxes
+                    //     $state.on('change', function(ev)
+                    //     {
+                    //         var $chcks = $("#example-2 tbody input[type='checkbox']");
                             
-                            if($state.is(':checked'))
-                            {
-                                $chcks.prop('checked', true).trigger('change');
-                            }
-                            else
-                            {
-                                $chcks.prop('checked', false).trigger('change');
-                            }
-                        });
-                    });
+                    //         if($state.is(':checked'))
+                    //         {
+                    //             $chcks.prop('checked', true).trigger('change');
+                    //         }
+                    //         else
+                    //         {
+                    //             $chcks.prop('checked', false).trigger('change');
+                    //         }
+                    //     });
+                    // });
                     </script>
                     
 
                     <table class="table table-bordered table-striped" id="example-2">
                         <thead>
                             <tr>
-                                <th class="no-sorting">
+<!--                                 <th class="no-sorting">
                                     <input type="checkbox" class="cbr">
-                                </th>
+                                </th> -->
                                 <th>编号</th>
+                                <th>员工账号</th>
                                 <th>员工名称</th>
                                 <th>角色</th>
                                 <th>公司</th>
@@ -209,10 +211,11 @@
                         
                         {volist name='list' id='user'}
                             <tr>
-                                <td>
+<!--                                 <td>
                                     <input type="checkbox" class="cbr">
-                                </td>
+                                </td> -->
                                 <td> {$user.sn} </td>
+                                <td> {$user.username} </td>
                                 <td> {$user.truename} </td>
                                 <td> {$user.findRole->name} </td>
                                 <td> {$user.findCompany->name} </td>
