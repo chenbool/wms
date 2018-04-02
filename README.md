@@ -30,20 +30,26 @@ https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
 ## qq群：484043598
 
 <div  align="center">    
-  <img src="./demo/QQ图片20171230143517.jpg" width = "400" alt="图片名称" align=center />
+  <img src="./demo/alipay.png" width = "450" alt="支付宝" align=center />
 </div>
 
 
 ## 演示
 
+[![视频演示](https://asciinema.org/a/42383.png)](http://www.56.com/iframe/MTQ5NzQxMDc5)
+
+---
+
 ![1](./demo/20171229163116.png)
 
-![1](./demo/20171229163127.png)
+![6](./demo/20180331020506.png)
 
-![1](./demo/20171229163140.png)
+![7](./demo/20180331020545.png)
 
-![1](./demo/20171229185301.png)
+![3](./demo/20171229163140.png)
 
-![1](./demo/20171230124819.png)
+![4](./demo/20171229185301.png)
 
+![5](./demo/20171230124819.png)
 
+![2](./demo/20171229163127.png)
