@@ -10,7 +10,7 @@ http://bool.yk.0zj.pw/index.php
 ---|---|---
 普通|admin | admin
 管理员|bool | admin
-
+测试|admin1 | admin
 
 
 ## 安装
