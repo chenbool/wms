@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -97,6 +97,16 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
     public function keys()
     {
         return new static(array_keys($this->items));
+    }
+
+    /**
+     * 返回数组中所有的值组成的新 Collection 实例
+     * @access public
+     * @return static
+     */
+    public function values()
+    {
+        return new static(array_values($this->items));
     }
 
     /**
@@ -273,7 +283,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
 
         $result = [];
         foreach ($this->items as $row) {
-            $key    = $value    = null;
+            $key    = $value = null;
             $keySet = $valueSet = false;
 
             if (null !== $indexKey && array_key_exists($indexKey, $row)) {
@@ -309,7 +319,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      */
     public function sort(callable $callback = null)
     {
-        $items = $this->items;
+        $items    = $this->items;
         $callback = $callback ?: function ($a, $b) {
             return $a == $b ? 0 : (($a < $b) ? -1 : 1);
         };

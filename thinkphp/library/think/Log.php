@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -176,7 +176,7 @@ class Log
             }
         }
 
-        if ($result = self::$driver->save($log)) {
+        if ($result = self::$driver->save($log, true)) {
             self::$log = [];
         }
 
@@ -211,7 +211,7 @@ class Log
         is_null(self::$driver) && self::init(Config::get('log'));
 
         // 写入日志
-        if ($result = self::$driver->save($log)) {
+        if ($result = self::$driver->save($log, false)) {
             self::$log = [];
         }
 
