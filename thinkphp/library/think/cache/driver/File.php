@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -26,8 +26,6 @@ class File extends Driver
         'path'          => CACHE_PATH,
         'data_compress' => false,
     ];
-
-    protected $expire;
 
     /**
      * 构造函数
@@ -63,11 +61,10 @@ class File extends Driver
     /**
      * 取得变量的存储文件名
      * @access protected
-     * @param  string $name 缓存变量名
-     * @param  bool   $auto 是否自动创建目录
+     * @param string $name 缓存变量名
      * @return string
      */
-    protected function getCacheKey($name, $auto = false)
+    protected function getCacheKey($name)
     {
         $name = md5($name);
         if ($this->options['cache_subdir']) {
@@ -79,8 +76,7 @@ class File extends Driver
         }
         $filename = $this->options['path'] . $name . '.php';
         $dir      = dirname($filename);
-
-        if ($auto && !is_dir($dir)) {
+        if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
         return $filename;
@@ -110,15 +106,13 @@ class File extends Driver
         if (!is_file($filename)) {
             return $default;
         }
-        $content      = file_get_contents($filename);
-        $this->expire = null;
+        $content = file_get_contents($filename);
         if (false !== $content) {
             $expire = (int) substr($content, 8, 12);
-            if (0 != $expire && time() > filemtime($filename) + $expire) {
+            if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
                 return $default;
             }
-            $this->expire = $expire;
-            $content      = substr($content, 32);
+            $content = substr($content, 32);
             if ($this->options['data_compress'] && function_exists('gzcompress')) {
                 //启用数据压缩
                 $content = gzuncompress($content);
@@ -146,7 +140,7 @@ class File extends Driver
         if ($expire instanceof \DateTime) {
             $expire = $expire->getTimestamp() - time();
         }
-        $filename = $this->getCacheKey($name, true);
+        $filename = $this->getCacheKey($name);
         if ($this->tag && !is_file($filename)) {
             $first = true;
         }
@@ -176,14 +170,11 @@ class File extends Driver
     public function inc($name, $step = 1)
     {
         if ($this->has($name)) {
-            $value  = $this->get($name) + $step;
-            $expire = $this->expire;
+            $value = $this->get($name) + $step;
         } else {
-            $value  = $step;
-            $expire = 0;
+            $value = $step;
         }
-
-        return $this->set($name, $value, $expire) ? $value : false;
+        return $this->set($name, $value, 0) ? $value : false;
     }
 
     /**
@@ -196,14 +187,11 @@ class File extends Driver
     public function dec($name, $step = 1)
     {
         if ($this->has($name)) {
-            $value  = $this->get($name) - $step;
-            $expire = $this->expire;
+            $value = $this->get($name) - $step;
         } else {
-            $value  = -$step;
-            $expire = 0;
+            $value = -$step;
         }
-
-        return $this->set($name, $value, $expire) ? $value : false;
+        return $this->set($name, $value, 0) ? $value : false;
     }
 
     /**
@@ -215,10 +203,7 @@ class File extends Driver
     public function rm($name)
     {
         $filename = $this->getCacheKey($name);
-        try {
-            return $this->unlink($filename);
-        } catch (\Exception $e) {
-        }
+        return $this->unlink($filename);
     }
 
     /**

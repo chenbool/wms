@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -119,18 +119,6 @@ class HasManyThrough extends Relation
      */
     public function relationCount($result, $closure)
     {}
-
-    /**
-     * 创建关联统计子查询
-     * @access public
-     * @param \Closure $closure 闭包
-     * @param string   $name    统计数据别名
-     * @return string
-     */
-    public function getRelationCountQuery($closure, &$name = null)
-    {
-        throw new Exception('relation not support: withCount');
-    }
 
     /**
      * 执行基础查询（进执行一次）

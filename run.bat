@@ -1,1 +1,0 @@
-php -S localhost:8877 -t ./public

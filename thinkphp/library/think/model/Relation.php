@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -35,8 +35,6 @@ abstract class Relation
     protected $localKey;
     // 基础查询
     protected $baseQuery;
-    // 是否为自关联
-    protected $selfRelation;
 
     /**
      * 获取关联的所属模型
@@ -49,13 +47,13 @@ abstract class Relation
     }
 
     /**
-     * 获取当前的关联模型对象实例
+     * 获取当前的关联模型类
      * @access public
-     * @return Model
+     * @return string
      */
     public function getModel()
     {
-        return $this->query->getModel();
+        return $this->model;
     }
 
     /**
@@ -66,28 +64,6 @@ abstract class Relation
     public function getQuery()
     {
         return $this->query;
-    }
-
-    /**
-     * 设置当前关联为自关联
-     * @access public
-     * @param  bool $self 是否自关联
-     * @return $this
-     */
-    public function selfRelation($self = true)
-    {
-        $this->selfRelation = $self;
-        return $this;
-    }
-
-    /**
-     * 当前关联是否为自关联
-     * @access public
-     * @return bool
-     */
-    public function isSelfRelation()
-    {
-        return $this->selfRelation;
     }
 
     /**

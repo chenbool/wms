@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -46,12 +46,9 @@ class Redis extends Driver
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
+        $func          = $this->options['persistent'] ? 'pconnect' : 'connect';
         $this->handler = new \Redis;
-        if ($this->options['persistent']) {
-            $this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
-        } else {
-            $this->handler->connect($this->options['host'], $this->options['port'], $this->options['timeout']);
-        }
+        $this->handler->$func($this->options['host'], $this->options['port'], $this->options['timeout']);
 
         if ('' != $this->options['password']) {
             $this->handler->auth($this->options['password']);
@@ -70,7 +67,7 @@ class Redis extends Driver
      */
     public function has($name)
     {
-        return $this->handler->exists($this->getCacheKey($name));
+        return $this->handler->get($this->getCacheKey($name)) ? true : false;
     }
 
     /**

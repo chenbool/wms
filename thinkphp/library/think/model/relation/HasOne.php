@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -50,11 +50,7 @@ class HasOne extends OneToOne
             call_user_func_array($closure, [ & $this->query]);
         }
         // 判断关联类型执行查询
-        $relationModel = $this->query
-            ->removeWhereField($this->foreignKey)
-            ->where($this->foreignKey, $this->parent->$localKey)
-            ->relation($subRelation)
-            ->find();
+        $relationModel = $this->query->where($this->foreignKey, $this->parent->$localKey)->relation($subRelation)->find();
 
         if ($relationModel) {
             $relationModel->setParent(clone $this->parent);
@@ -107,7 +103,7 @@ class HasOne extends OneToOne
 
         return $this->parent->db()->alias($model)
             ->field($fields)
-            ->join([$table => $relation], $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey, $this->joinType)
+            ->join($table . ' ' . $relation, $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey, $this->joinType)
             ->where($where);
     }
 
@@ -134,8 +130,7 @@ class HasOne extends OneToOne
         }
 
         if (!empty($range)) {
-            $this->query->removeWhereField($foreignKey);
-            $data = $this->eagerlyWhere($this->query, [
+            $data = $this->eagerlyWhere($this, [
                 $foreignKey => [
                     'in',
                     $range,
@@ -177,8 +172,7 @@ class HasOne extends OneToOne
     {
         $localKey   = $this->localKey;
         $foreignKey = $this->foreignKey;
-        $this->query->removeWhereField($foreignKey);
-        $data = $this->eagerlyWhere($this->query, [$foreignKey => $result->$localKey], $foreignKey, $relation, $subRelation, $closure);
+        $data       = $this->eagerlyWhere($this, [$foreignKey => $result->$localKey], $foreignKey, $relation, $subRelation, $closure);
 
         // 关联模型
         if (!isset($data[$result->$localKey])) {
@@ -196,20 +190,4 @@ class HasOne extends OneToOne
         }
     }
 
-    /**
-     * 执行基础查询（仅执行一次）
-     * @access protected
-     * @return void
-     */
-    protected function baseQuery()
-    {
-        if (empty($this->baseQuery)) {
-            if (isset($this->parent->{$this->localKey})) {
-                // 关联查询带入关联条件
-                $this->query->where($this->foreignKey, '=', $this->parent->{$this->localKey});
-            }
-
-            $this->baseQuery = true;
-        }
-    }
 }

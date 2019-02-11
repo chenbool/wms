@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -57,18 +57,18 @@ abstract class OneToOne extends Relation
      */
     public function eagerly(Query $query, $relation, $subRelation, $closure, $first)
     {
-        $name = Loader::parseName(basename(str_replace('\\', '/', get_class($query->getModel()))));
-
+        $name  = Loader::parseName(basename(str_replace('\\', '/', $query->getModel())));
+        $alias = $name;
         if ($first) {
             $table = $query->getTable();
-            $query->table([$table => $name]);
+            $query->table([$table => $alias]);
             if ($query->getOptions('field')) {
                 $field = $query->getOptions('field');
                 $query->removeOption('field');
             } else {
                 $field = true;
             }
-            $query->field($field, false, $table, $name);
+            $query->field($field, false, $table, $alias);
             $field = null;
         }
 
@@ -78,9 +78,9 @@ abstract class OneToOne extends Relation
         $query->via($joinAlias);
 
         if ($this instanceof BelongsTo) {
-            $query->join([$joinTable => $joinAlias], $name . '.' . $this->foreignKey . '=' . $joinAlias . '.' . $this->localKey, $this->joinType);
+            $query->join($joinTable . ' ' . $joinAlias, $alias . '.' . $this->foreignKey . '=' . $joinAlias . '.' . $this->localKey, $this->joinType);
         } else {
-            $query->join([$joinTable => $joinAlias], $name . '.' . $this->localKey . '=' . $joinAlias . '.' . $this->foreignKey, $this->joinType);
+            $query->join($joinTable . ' ' . $joinAlias, $alias . '.' . $this->localKey . '=' . $joinAlias . '.' . $this->foreignKey, $this->joinType);
         }
 
         if ($closure) {
@@ -304,8 +304,6 @@ abstract class OneToOne extends Relation
      */
     protected function eagerlyWhere($model, $where, $key, $relation, $subRelation = '', $closure = false)
     {
-        $this->baseQuery = true;
-
         // 预载入关联查询 支持嵌套预载入
         if ($closure) {
             call_user_func_array($closure, [ & $model]);
@@ -323,15 +321,4 @@ abstract class OneToOne extends Relation
         return $data;
     }
 
-    /**
-     * 创建关联统计子查询
-     * @access public
-     * @param \Closure $closure 闭包
-     * @param string   $name    统计数据别名
-     * @return string
-     */
-    public function getRelationCountQuery($closure, &$name = null)
-    {
-        throw new Exception('relation not support: withCount');
-    }
 }

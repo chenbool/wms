@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -143,7 +143,7 @@ class HasMany extends Relation
             if ($closure) {
                 call_user_func_array($closure, [ & $this->query]);
             }
-            $count = $this->query->where($this->foreignKey, $result->$localKey)->count();
+            $count = $this->query->where([$this->foreignKey => $result->$localKey])->count();
         }
         return $count;
     }
@@ -152,19 +152,20 @@ class HasMany extends Relation
      * 创建关联统计子查询
      * @access public
      * @param \Closure $closure 闭包
-     * @param string   $name    统计数据别名
      * @return string
      */
-    public function getRelationCountQuery($closure, &$name = null)
+    public function getRelationCountQuery($closure)
     {
         if ($closure) {
-            $return = call_user_func_array($closure, [ & $this->query]);
-            if ($return && is_string($return)) {
-                $name = $return;
-            }
+            call_user_func_array($closure, [ & $this->query]);
         }
         $localKey = $this->localKey ?: $this->parent->getPk();
-        return $this->query->whereExp($this->foreignKey, '=' . $this->parent->getTable() . '.' . $localKey)->fetchSql()->count();
+        return $this->query->where([
+            $this->foreignKey => [
+                'exp',
+                '=' . $this->parent->getTable() . '.' . $localKey,
+            ],
+        ])->fetchSql()->count();
     }
 
     /**
@@ -205,29 +206,10 @@ class HasMany extends Relation
         if ($data instanceof Model) {
             $data = $data->getData();
         }
-
         // 保存关联表数据
+        $model                   = new $this->model;
         $data[$this->foreignKey] = $this->parent->{$this->localKey};
-
-        $model = new $this->model();
         return $model->save($data) ? $model : false;
-    }
-
-    /**
-     * 创建关联对象实例
-     * @param array $data
-     * @return Model
-     */
-    public function make($data = [])
-    {
-        if ($data instanceof Model) {
-            $data = $data->getData();
-        }
-
-        // 保存关联表数据
-        $data[$this->foreignKey] = $this->parent->{$this->localKey};
-
-        return new $this->model($data);
     }
 
     /**
@@ -263,7 +245,7 @@ class HasMany extends Relation
         return $this->parent->db()
             ->alias($model)
             ->field($model . '.*')
-            ->join([$table => $relation], $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey, $joinType)
+            ->join($table . ' ' . $relation, $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey, $joinType)
             ->group($relation . '.' . $this->foreignKey)
             ->having('count(' . $id . ')' . $operator . $count);
     }
@@ -295,7 +277,7 @@ class HasMany extends Relation
         return $this->parent->db()->alias($model)
             ->field($fields)
             ->group($model . '.' . $this->localKey)
-            ->join([$table => $relation], $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey)
+            ->join($table . ' ' . $relation, $model . '.' . $this->localKey . '=' . $relation . '.' . $this->foreignKey)
             ->where($where);
     }
 

@@ -1,0 +1,153 @@
+	<!-- Imported scripts on this page -->
+<!-- 	<script src="__STATIC__/js/jquery-validate/jquery.validate.min.js"></script>
+	<link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+<form class="validate edit_from" novalidate="novalidate">
+
+	<div class="row">	
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品编号</label>
+				<input type="text" class="form-control" name="sn" placeholder="产品编号" value="{$info.sn}">
+				<input type="hidden" name="id" value="{$info.id}">
+			</div>	
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品名称</label>
+				<input type="text" class="form-control" name="name" placeholder="产品名称" value="{$info.name}">
+			</div>	
+		</div>
+	</div>
+
+	<div class="row">	
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">厂家编号</label>
+				
+				<input type="text" class="form-control" name="cjsn" placeholder="厂家编号" value="{$info.cjsn}">
+			</div>	
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">内部编号</label>
+				
+				<input type="text" class="form-control" name="nbsn" placeholder="内部编号" value="{$info.nbsn}">
+			</div>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认类别</label>
+                <select class="form-control" name="category">
+                    <option value="0"  >默认</option>
+
+                    {volist name='category' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.category" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+
+                </select>  
+			</div>	
+		</div> 
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">产品单位</label>
+                <select class="form-control" name="unit">
+                    {volist name='unit' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.unit" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认仓库</label>
+                <select class="form-control" name="storage">
+                    {volist name='storage' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.storage" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认库位</label>
+                <select class="form-control" name="location">
+                    {volist name='location' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.location" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认供应商</label>
+                <select class="form-control" name="supplier">
+                    {volist name='supplier' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.supplier" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+		<div class="col-md-6">
+			<div class="form-group">
+                <label class="control-label">默认客户</label>
+                <select class="form-control" name="customer">
+                    {volist name='customer' id='vo'}
+                    	<option value="{$vo.name}" {eq name="$info.customer" value="$vo.name"} selected="selected" {/eq} >{$vo.name}</option>
+                    {/volist}
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+
+	<div class="row">	
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品规格</label>
+				
+				<input type="text" class="form-control" name="spec" placeholder="产品规格" value="{$info.spec}">
+			</div>	
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="field-2" class="control-label">产品价格</label>
+				
+				<input type="text" class="form-control" name="price" placeholder="产品价格" value="{$info.price}">
+			</div>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+                <label class="control-label">产品状态</label>
+                <select class="form-control" name="status">
+                    <option value="0" {eq name="$info.status" value="0"} selected="selected" {/eq} >正常</option>
+                    <option value="1" {eq name="$info.status" value="1"} selected="selected" {/eq} >废弃</option>
+                </select>  
+			</div>	
+		</div> 
+    </div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group no-margin">
+				<label for="field-7" class="control-label">备注</label>
+				
+				<textarea class="form-control autogrow" name="desc" placeholder="备注" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;">{$info.desc}</textarea>
+			</div>	
+		</div>
+	</div>
+
+</form>
