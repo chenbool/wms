@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -42,7 +42,6 @@ class Validate
         'float'       => ':attribute must be float',
         'boolean'     => ':attribute must be bool',
         'email'       => ':attribute not a valid email address',
-        'mobile'      => ':attribute not a valid mobile',
         'array'       => ':attribute must be a array',
         'accepted'    => ':attribute must be yes,on or 1',
         'date'        => ':attribute not a valid datetime',
@@ -68,6 +67,8 @@ class Validate
         'min'         => 'min size of :attribute must be :rule',
         'after'       => ':attribute cannot be less than :rule',
         'before'      => ':attribute cannot exceed :rule',
+        'afterWith'   => ':attribute cannot be less than :rule',
+        'beforeWith'  => ':attribute cannot exceed :rule',
         'expire'      => ':attribute not within :rule',
         'allowIp'     => 'access IP is not allowed',
         'denyIp'      => 'access IP denied',
@@ -341,6 +342,41 @@ class Validate
     }
 
     /**
+     * 根据验证规则验证数据
+     * @access protected
+     * @param  mixed     $value 字段值
+     * @param  mixed     $rules 验证规则
+     * @return bool
+     */
+    protected function checkRule($value, $rules)
+    {
+        if ($rules instanceof \Closure) {
+            return call_user_func_array($rules, [$value]);
+        } elseif (is_string($rules)) {
+            $rules = explode('|', $rules);
+        }
+
+        foreach ($rules as $key => $rule) {
+            if ($rule instanceof \Closure) {
+                $result = call_user_func_array($rule, [$value]);
+            } else {
+                // 判断验证类型
+                list($type, $rule) = $this->getValidateType($key, $rule);
+
+                $callback = isset(self::$type[$type]) ? self::$type[$type] : [$this, $type];
+
+                $result = call_user_func_array($callback, [$value, $rule]);
+            }
+
+            if (true !== $result) {
+                return $result;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * 验证单个字段规则
      * @access protected
      * @param string    $field  字段名
@@ -364,25 +400,7 @@ class Validate
                 $info   = is_numeric($key) ? '' : $key;
             } else {
                 // 判断验证类型
-                if (is_numeric($key)) {
-                    if (strpos($rule, ':')) {
-                        list($type, $rule) = explode(':', $rule, 2);
-                        if (isset($this->alias[$type])) {
-                            // 判断别名
-                            $type = $this->alias[$type];
-                        }
-                        $info = $type;
-                    } elseif (method_exists($this, $rule)) {
-                        $type = $rule;
-                        $info = $rule;
-                        $rule = '';
-                    } else {
-                        $type = 'is';
-                        $info = $rule;
-                    }
-                } else {
-                    $info = $type = $key;
-                }
+                list($type, $rule, $info) = $this->getValidateType($key, $rule);
 
                 // 如果不是require 有数据才会行验证
                 if (0 === strpos($info, 'require') || (!is_null($value) && '' !== $value)) {
@@ -416,6 +434,39 @@ class Validate
             $i++;
         }
         return $result;
+    }
+
+    /**
+     * 获取当前验证类型及规则
+     * @access public
+     * @param  mixed     $key
+     * @param  mixed     $rule
+     * @return array
+     */
+    protected function getValidateType($key, $rule)
+    {
+        // 判断验证类型
+        if (!is_numeric($key)) {
+            return [$key, $rule, $key];
+        }
+
+        if (strpos($rule, ':')) {
+            list($type, $rule) = explode(':', $rule, 2);
+            if (isset($this->alias[$type])) {
+                // 判断别名
+                $type = $this->alias[$type];
+            }
+            $info = $type;
+        } elseif (method_exists($this, $rule)) {
+            $type = $rule;
+            $info = $rule;
+            $rule = '';
+        } else {
+            $type = 'is';
+            $info = $rule;
+        }
+
+        return [$type, $rule, $info];
     }
 
     /**
@@ -829,21 +880,26 @@ class Validate
             // 支持多个字段验证
             $fields = explode('^', $key);
             foreach ($fields as $key) {
-                $map[$key] = $data[$key];
+                if (isset($data[$key])) {
+                    $map[$key] = $data[$key];
+                }
             }
         } elseif (strpos($key, '=')) {
             parse_str($key, $map);
-        } else {
+        } elseif (isset($data[$field])) {
             $map[$key] = $data[$field];
+        } else {
+            $map = [];
         }
 
-        $pk = strval(isset($rule[3]) ? $rule[3] : $db->getPk());
-        if (isset($rule[2])) {
-            $map[$pk] = ['neq', $rule[2]];
-        } elseif (isset($data[$pk])) {
-            $map[$pk] = ['neq', $data[$pk]];
+        $pk = isset($rule[3]) ? $rule[3] : $db->getPk();
+        if (is_string($pk)) {
+            if (isset($rule[2])) {
+                $map[$pk] = ['neq', $rule[2]];
+            } elseif (isset($data[$pk])) {
+                $map[$pk] = ['neq', $data[$pk]];
+            }
         }
-
         if ($db->where($map)->field($pk)->find()) {
             return false;
         }
@@ -1063,9 +1119,10 @@ class Validate
      * @access protected
      * @param mixed     $value  字段值
      * @param mixed     $rule  验证规则
+     * @param array     $data  数据
      * @return bool
      */
-    protected function after($value, $rule)
+    protected function after($value, $rule, $data)
     {
         return strtotime($value) >= strtotime($rule);
     }
@@ -1075,11 +1132,40 @@ class Validate
      * @access protected
      * @param mixed     $value  字段值
      * @param mixed     $rule  验证规则
+     * @param array     $data  数据
      * @return bool
      */
-    protected function before($value, $rule)
+    protected function before($value, $rule, $data)
     {
         return strtotime($value) <= strtotime($rule);
+    }
+
+    /**
+     * 验证日期字段
+     * @access protected
+     * @param mixed     $value  字段值
+     * @param mixed     $rule  验证规则
+     * @param array     $data  数据
+     * @return bool
+     */
+    protected function afterWith($value, $rule, $data)
+    {
+        $rule = $this->getDataValue($data, $rule);
+        return !is_null($rule) && strtotime($value) >= strtotime($rule);
+    }
+
+    /**
+     * 验证日期字段
+     * @access protected
+     * @param mixed     $value  字段值
+     * @param mixed     $rule  验证规则
+     * @param array     $data  数据
+     * @return bool
+     */
+    protected function beforeWith($value, $rule, $data)
+    {
+        $rule = $this->getDataValue($data, $rule);
+        return !is_null($rule) && strtotime($value) <= strtotime($rule);
     }
 
     /**
@@ -1145,7 +1231,7 @@ class Validate
             // 不是正则表达式则两端补上/
             $rule = '/^' . $rule . '$/';
         }
-        return 1 === preg_match($rule, (string) $value);
+        return is_scalar($value) && 1 === preg_match($rule, (string) $value);
     }
 
     /**

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "topthink/framework",
-            "version": "v5.0.13",
+            "version": "v5.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "29803c09c9e8d7385ab720d2c199c036ceedc4d3"
+                "reference": "c255c22b2f5fa30f320ecf6c1d29f7740eb3e8be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/29803c09c9e8d7385ab720d2c199c036ceedc4d3.zip",
-                "reference": "29803c09c9e8d7385ab720d2c199c036ceedc4d3",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/c255c22b2f5fa30f320ecf6c1d29f7740eb3e8be",
+                "reference": "c255c22b2f5fa30f320ecf6c1d29f7740eb3e8be",
                 "shasum": ""
             },
             "require": {
@@ -55,20 +55,20 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2017-12-13T04:44:30+00:00"
+            "time": "2019-01-11T08:04:58+00:00"
         },
         {
             "name": "topthink/think-helper",
-            "version": "v1.0.6",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-helper.git",
-                "reference": "0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f"
+                "reference": "5f92178606c8ce131d36b37a57c58eb71e55f019"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-helper/0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f.zip",
-                "reference": "0c99dc625b0d2d4124e1b6ca15a3ad6f0125963f",
+                "url": "https://api.github.com/repos/top-think/think-helper/zipball/5f92178606c8ce131d36b37a57c58eb71e55f019",
+                "reference": "5f92178606c8ce131d36b37a57c58eb71e55f019",
                 "shasum": ""
             },
             "type": "library",
@@ -91,7 +91,7 @@
                 }
             ],
             "description": "The ThinkPHP5 Helper Package",
-            "time": "2017-04-05T07:15:37+00:00"
+            "time": "2018-10-05T00:43:21+00:00"
         },
         {
             "name": "topthink/think-image",
@@ -103,7 +103,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-image/8586cf47f117481c6d415b20f7dedf62e79d5512.zip",
+                "url": "https://api.github.com/repos/top-think/think-image/zipball/8586cf47f117481c6d415b20f7dedf62e79d5512",
                 "reference": "8586cf47f117481c6d415b20f7dedf62e79d5512",
                 "shasum": ""
             },
@@ -143,7 +143,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-installer/1be326e68f63de4e95977ed50f46ae75f017556d.zip",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/1be326e68f63de4e95977ed50f46ae75f017556d",
                 "reference": "1be326e68f63de4e95977ed50f46ae75f017556d",
                 "shasum": ""
             },
@@ -184,7 +184,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-migration/8e489f8d38a39876690c0e00fcf9a54ae92c4d3d.zip",
+                "url": "https://api.github.com/repos/top-think/think-migration/zipball/8e489f8d38a39876690c0e00fcf9a54ae92c4d3d",
                 "reference": "8e489f8d38a39876690c0e00fcf9a54ae92c4d3d",
                 "shasum": ""
             },
@@ -215,21 +215,24 @@
         },
         {
             "name": "topthink/think-queue",
-            "version": "v1.1.4",
+            "version": "v1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-queue.git",
-                "reference": "ad709611d516e13d6760234bc98e91faa901cae8"
+                "reference": "250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-queue/ad709611d516e13d6760234bc98e91faa901cae8.zip",
-                "reference": "ad709611d516e13d6760234bc98e91faa901cae8",
+                "url": "https://api.github.com/repos/top-think/think-queue/zipball/250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245",
+                "reference": "250650eb0e8ea5af4cfdc7ae46f3f4e0a24ac245",
                 "shasum": ""
             },
             "require": {
                 "topthink/think-helper": ">=1.0.4",
                 "topthink/think-installer": ">=1.0.10"
+            },
+            "require-dev": {
+                "topthink/framework": "~5.0.0"
             },
             "type": "think-extend",
             "extra": {
@@ -256,7 +259,7 @@
                 }
             ],
             "description": "The ThinkPHP5 Queue Package",
-            "time": "2017-06-25T00:49:56+00:00"
+            "time": "2018-10-15T10:16:55+00:00"
         }
     ],
     "packages-dev": [],
