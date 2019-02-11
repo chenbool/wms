@@ -83,7 +83,7 @@ return [
     // pathinfo分隔符
     'pathinfo_depr'          => '/',
     // URL伪静态后缀
-    'url_html_suffix'        => 'html',
+    'url_html_suffix'        => '',
     // URL普通方式参数 用于自动生成
     'url_common_param'       => false,
     // URL参数方式 0 按名称成对解析 1 按顺序解析
