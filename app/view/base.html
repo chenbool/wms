@@ -8,7 +8,7 @@
     <meta name="description" content="Xenon Boostrap Admin Panel" />
     <meta name="author" content="" />
 
-    <title>Xenon仓库管理</title>
+    <title>{block name="title"}仓库管理{/block}</title>
 
     <link rel="stylesheet" href="__STATIC__/css/fonts/linecons/css/linecons.css">
     <link rel="stylesheet" href="__STATIC__/css/fonts/fontawesome/css/font-awesome.min.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="__STATIC__/css/xenon-components.css">
     <link rel="stylesheet" href="__STATIC__/css/xenon-skins.css">
     <link rel="stylesheet" href="__STATIC__/css/custom.css">
-
+    {block name="style"}{/block}
     <script src="__STATIC__/js/jquery-1.11.1.min.js"></script>
 
     <!-- toast -->
@@ -565,6 +565,6 @@
     <script src="__STATIC__/js/xenon-toggles.js"></script>
     <!-- JavaScripts initializations and stuff -->
     <script src="__STATIC__/js/xenon-custom.js"></script>
-
+    {block name="script"}{/block}
 </body>
 </html>
