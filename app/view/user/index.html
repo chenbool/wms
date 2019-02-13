@@ -82,29 +82,35 @@
                         <span style="margin-left: 15px;">
                             <label class="control-label">员工状态</label>
                             <select class="form-control" name="status">
-                                <option value="" {eq name="Request.get.status" value=" " } selected="selected" {/eq}>全部
-                                    </option> <option value="0" {eq name="Request.get.status" value="0" }
-                                    selected="selected" {/eq}>正常 </option> <option value="1" {eq
-                                    name="Request.get.status" value="1" } selected="selected" {/eq}>废弃 </option>
-                                    </select> </span> <span style="margin-left: 15px;">
-                                    <label class="control-label">角色</label>
-                                    <select class="form-control" name="role">
-                                        <option value="0">默认</option>
-                                        {volist name='role' id='vo'}
-                                        <option value="{$vo.id}" {eq name="Request.get.role" value="$vo.id" }
-                                            selected="selected" {/eq}>{$vo.name} </option> {/volist} </select> </span>
-                                            <span style="margin-left: 15px;">
-                                            <label class="control-label">所属公司</label>
-                                            <select class="form-control" name="company">
-                                                <option value="0">默认</option>
-                                                {volist name='company' id='vo'}
-                                                <option value="{$vo.id}" {eq name="Request.get.company" value="$vo.id" }
-                                                    selected="selected" {/eq}>{$vo.name} </option> {/volist} </select>
-                                                    </span> <span style="margin-left: 15px;">
-                                                    <button class="btn btn-default btn-primary" type="submit"
-                                                        style="margin-top:10px;">
-                                                        <span class="fa-search"></span> 搜 索
-                                                    </button>
+                                <option value="" {eq name="Request.get.status" value=" " } selected="selected" {/eq}>全部</option> 
+                                <option value="0" {eq name="Request.get.status" value="0" } selected="selected" {/eq}>正常 </option> 
+                                <option value="1" {eq name="Request.get.status" value="1" } selected="selected" {/eq}>废弃 </option>
+                            </select> 
+                        </span> 
+                        <span style="margin-left: 15px;">
+                                    
+                            <label class="control-label">角色</label>
+                            <select class="form-control" name="role">
+                                <option value="0">默认</option>
+                                {volist name='role' id='vo'}
+                                    <option value="{$vo.id}" {eq name="Request.get.role" value="$vo.id" } selected="selected" {/eq}>{$vo.name} </option>
+                                {/volist} 
+                            </select> 
+                        </span>
+                        <span style="margin-left: 15px;">
+                            <label class="control-label">所属公司</label>
+                            <select class="form-control" name="company">
+                                <option value="0">默认</option>
+                                {volist name='company' id='vo'}
+                                    <option value="{$vo.id}" {eq name="Request.get.company" value="$vo.id" } selected="selected" {/eq}>{$vo.name} </option> 
+                                {/volist}
+                            </select>
+                                                   
+                        </span> 
+                        <span style="margin-left: 15px;">
+                            <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">
+                                <span class="fa-search"></span> 搜 索
+                            </button>
                         </span>
 
                     </form>
@@ -116,7 +122,6 @@
                 <script type="text/javascript">
                     jQuery(document).ready(function ($) {
                         $("#example-2").dataTable({
-                            dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
                             dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
                             aoColumns: [
                                 { bSortable: false },
@@ -203,8 +208,7 @@
 
                 <div class="row">
                     <div class="col-xs-6">
-                        <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共{:count(
-                            $list ) } 行数据</div>
+                        <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共 {$list->total()} 行数据</div>
                     </div>
                     <div class="col-xs-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
@@ -349,7 +353,9 @@
                 }
             }, "json");
         }
-
     }
+
+    //显示菜单
+    nav_show();
 </script>
 {/block}

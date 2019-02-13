@@ -1,7 +1,5 @@
-<?php
-$request= \think\Request::instance();
+<?php $request= \think\Request::instance();?>
 
-?>
 				<ul id="main-menu" class="main-menu">
 
 					{volist name='_menuList' id='vo'}
@@ -27,13 +25,11 @@ $request= \think\Request::instance();
 				</ul>
 
 
-<script>
-
-	function nav_show($cn){
-		var className = $cn || '{$request->controller()}-{$request->action()}';
-		$("."+className).addClass('active');
-		$("."+className).parent().parent().addClass('active open');
-		$("."+className).parent().show();
-	}
-	nav_show();
-</script>
+				<script>
+					function nav_show($cn){
+						var className = $cn || '{$request->controller()}-{$request->action()}';
+						$("."+className).addClass('active');
+						$("."+className).parent().parent().addClass('active open');
+						$("."+className).parent().show();
+					}
+				</script>
