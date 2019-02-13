@@ -290,11 +290,14 @@
 <script type="text/javascript">
     //add
     function showAjaxModal() {
-        jQuery('#modal-add').modal('show', { backdrop: 'static' });
-
         jQuery.ajax({
             url: "{:url('User/create')}",
             success: function (response) {
+                if(typeof response != 'string'){
+                    toastr.error(response.msg);
+                    return false;
+                }
+                jQuery('#modal-add').modal('show', { backdrop: 'static' });
                 jQuery('#modal-add .modal-body').html(response);
             }
         });
@@ -317,11 +320,14 @@
 
     //edit
     function editAjaxModal(url) {
-        jQuery('#modal-edit').modal('show', { backdrop: 'static' });
-
         jQuery.ajax({
             url: url,
             success: function (response) {
+                if(typeof response != 'string'){
+                    toastr.error(response.msg);
+                    return false;
+                }
+                jQuery('#modal-edit').modal('show', { backdrop: 'static' });
                 jQuery('#modal-edit .modal-body').html(response);
             }
         });

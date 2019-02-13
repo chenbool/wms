@@ -30,47 +30,18 @@ class MenuService
         ])->select();
     }
 
-    public function getMenu($ids)
-    {
-
-        return [
-            'father' => $this->menuModel->where([
-                'status' => 0,
-                'level' => 0,
-                'id' => ['in', "$ids"]
-            ])->select(),
-            'child' => $this->menuModel->where([
-                'status' => 0,
-                'level' => ['>', 0],
-                'id' => ['in', "$ids"]
-            ])->select()
-        ];
-    }
-
-    public function getMenuAll()
-    {
-        return [
-            'father' => $this->menuModel->where([
-                'status' => 0,
-                'level' => 0
-            ])->select(),
-            'child' => $this->menuModel->where([
-                'status' => 0,
-                'level' => ['>', 0]
-            ])->select()
-        ];
-    }
 
     public function getMenuTree($ids = null)
     {
-        if (empty($ids)) {
-            $menuList = Db::name('menu')->where([
-                'status' => 0,
-            ])->select();
-        } else {
-            $menuList = Db::name('menu')->where([
-                'status' => 0, 'id' => ['in', "$ids"]
-            ])->select();
+        $menuList = session('user_menu'); //先从session里获取用户菜单
+        if (empty($ids) && empty($menuList)) {
+            $where = ['status' => 0,];
+        } elseif(empty($menuList)) {
+            $where = ['status' => 0, 'id' => ['in', "$ids"]];
+        }
+        if(empty($menuList)){
+            $menuList = Db::name('menu')->where($where)->select();
+            session('user_menu',$menuList);
         }
 
         if(empty($menuList)) return [];
@@ -98,21 +69,34 @@ class MenuService
     public function getMenuShow($obj)
     {
         //是否是超级管理员
-        if ($obj->id == '1') {
+        $super_admin = config('super_admin');
+        if (isset($super_admin) && in_array($obj->id,$super_admin)) {
             $_menuList = $this->getMenuTree();
         } else {
             $_menuList = $this->getMenuTree($obj->findRole->ids);
         }
 
-        return [
-            'my_info' => $obj,
-            '_menuList' => $_menuList
-        ];
+        return $_menuList;
     }
 
-    public function is_auth()
+    public function checkPermission($ids,$controller,$action)
     {
-
+        if(empty($ids)){
+            return false;
+        }
+        $permission = session('role_permission');
+        if(!$permission){
+            $permission = [];
+            $temp = $this->menuModel->where('id','in',$ids)->select();
+            $temp = collection($temp)->toArray();
+            foreach($temp as $val){
+                if(!empty($val['controller'])){
+                    $permission[$val['controller']."/".$val['action']] = 1;
+                }
+            }
+            session('role_permission',$permission);
+        }
+        return isset($permission[$controller.'/'.$action]);
     }
 
 

@@ -1,0 +1,45 @@
+{extend name="base"}
+{block name="title"}访问错误 - {__block__}{/block}
+{block name="content"}
+<div class="page-error centered">
+				
+    <div class="error-symbol">
+        <i class="fa fa-angellist"></i>
+    </div>
+    
+    <h2>
+        成功 200
+        <small>{$msg}</small>
+    </h2>
+    
+    <p>页面将自动跳转，等待时间： <b id="wait">{$wait}</b></p>    
+</div>
+<div class="page-error-search centered">
+    <form class="form-half" method="get" action="" enctype="application/x-www-form-urlencoded">
+        <input type="text" class="form-control" placeholder="Search...">
+        
+        <button type="submit" class="btn-unstyled">
+            <i class="linecons-search"></i>
+        </button>
+    </form>
+    <a href="<?php echo($url);?>" id="href" class="go-back">
+        <i class="fa-angle-left"></i>
+        返回
+    </a>
+</div>
+{/block}
+{block name="script"}
+<script>
+(function(){
+    var wait = document.getElementById('wait'),
+        href = document.getElementById('href').href;
+    var interval = setInterval(function(){
+        var time = --wait.innerHTML;
+        if(time <= 0) {
+            location.href = href;
+            clearInterval(interval);
+        };
+    }, 1000);
+})();
+</script>
+{/block}
