@@ -1,7 +1,7 @@
 /*!
- * Responsive Tables v5.0.4 (http://gergeo.se/RWD-Table-Patterns)
+ * Responsive Tables v5.3.3 (http://gergeo.se/RWD-Table-Patterns)
  * This is an awesome solution for responsive tables with complex data.
- * Authors: Nadan Gergeo <nadan.gergeo@gmail.com> (www.gergeo.se) & Maggie Wachs (www.filamentgroup.com)
+ * Authors: Nadan Gergeo <nadan@blimp.se> (www.blimp.se), Lucas Wiener <lucas@blimp.se> & "Maggie Wachs (www.filamentgroup.com)"
  * Licensed under MIT (https://github.com/nadangergeo/RWD-Table-Patterns/blob/master/LICENSE-MIT)
  */
 (function ($) {
@@ -11,6 +11,8 @@
     // ==========================
 
     var ResponsiveTable = function(element, options) {
+        // console.time('init');
+
         var that = this;
 
         this.options = options;
@@ -35,9 +37,8 @@
 
         //good to have - for easy access
         this.$thead = this.$table.find('thead');
-        this.$tbody = this.$table.find('tbody');
-        this.$hdrCells = this.$thead.find('th');
-        this.$bodyRows = this.$tbody.find('tr');
+        this.$hdrCells = this.$thead.find("tr").first().find('th');
+        this.$bodyRows = this.$table.find('tbody, tfoot').find('tr');
 
         //toolbar and buttons
         this.$btnToolbar = null; //defined farther down
@@ -54,27 +55,29 @@
         this.displayAllTrigger = 'display-all-' + this.id + '.responsive-table';
         this.idPrefix = this.id + '-col-';
 
-        // Check if iOS
-        // property to save performance
-        this.iOS = isIOS();
-      
+        this.headerColIndices = {};
+        this.headerRowIndices = {};
+
         // Setup table
         // -------------------------
-      
+
         //wrap table
         this.wrapTable();
 
         //create toolbar with buttons
         this.createButtonToolbar();
 
+        //Build header indices mapping (for colspans in header)
+        this.buildHeaderCellIndices();
+
         // Setup cells
         // -------------------------
 
-        //setup header cells
-        this.setupHdrCells();
+        //setup header
+        this.setupTableHeader();
 
         //setup standard cells
-        this.setupStandardCells();
+        this.setupBodyRows();
 
         //create sticky table head
         if(this.options.stickyTableHeader){
@@ -98,7 +101,9 @@
             //update colspan and visibility of spanning cells
             $.proxy(that.updateSpanningCells(), that);
 
-        });
+        }).trigger('resize');
+
+        // console.timeEnd('init');
     };
 
     ResponsiveTable.DEFAULTS = {
@@ -107,11 +112,17 @@
         fixedNavbar: '.navbar-fixed-top',  // Is there a fixed navbar? The stickyTableHeader needs to know about it!
         addDisplayAllBtn: true, // should it have a display-all button?
         addFocusBtn: true,  // should it have a focus button?
-        focusBtnIcon: 'glyphicon glyphicon-screenshot'
+        focusBtnIcon: 'glyphicon glyphicon-screenshot',
+        mainContainer: window,
+        i18n: {
+            focus     : 'Focus',
+            display   : 'Display',
+            displayAll: 'Display all'
+        }
     };
 
     // Wrap table
-    ResponsiveTable.prototype.wrapTable = function() {        
+    ResponsiveTable.prototype.wrapTable = function() {
         this.$tableScrollWrapper.wrap('<div class="table-wrapper"/>');
         this.$tableWrapper = this.$tableScrollWrapper.parent();
     };
@@ -120,10 +131,13 @@
     ResponsiveTable.prototype.createButtonToolbar = function() {
         var that = this;
 
-        this.$btnToolbar = $('<div class="btn-toolbar" />');
+        this.$btnToolbar = $('[data-responsive-table-toolbar="' + this.id + '"]').addClass('btn-toolbar');
+        if(this.$btnToolbar.length === 0) {
+          this.$btnToolbar = $('<div class="btn-toolbar" />');
+        }
 
         this.$dropdownGroup = $('<div class="btn-group dropdown-btn-group pull-right" />');
-        this.$dropdownBtn = $('<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Display <span class="caret"></span></button>');
+        this.$dropdownBtn = $('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + this.options.i18n.display + ' <span class="caret"></span></button>');
         this.$dropdownContainer = $('<ul class="dropdown-menu"/>');
 
         // Focus btn
@@ -132,7 +146,7 @@
             this.$focusGroup = $('<div class="btn-group focus-btn-group" />');
 
             // Create focus btn
-            this.$focusBtn = $('<button class="btn btn-default">Focus</button>');
+            this.$focusBtn = $('<button type="button" class="btn btn-default">' + this.options.i18n.focus + '</button>');
 
             if(this.options.focusBtnIcon) {
                 this.$focusBtn.prepend('<span class="' + this.options.focusBtnIcon + '"></span> ');
@@ -157,7 +171,7 @@
          // Display-all btn
         if(this.options.addDisplayAllBtn) {
             // Create display-all btn
-            this.$displayAllBtn = $('<button class="btn btn-default">Display all</button>');
+            this.$displayAllBtn = $('<button type="button" class="btn btn-default">' + this.options.i18n.displayAll + '</button>');
             // Add display-all btn to dropdown-btn-group
             this.$dropdownGroup.append(this.$displayAllBtn);
 
@@ -265,22 +279,30 @@
         that.$stickyTableHeader.css('height', that.$thead.height() + 2);
 
         //insert sticky table header
-        if($('html').hasClass('lt-ie10')){
-            that.$tableWrapper.prepend(that.$stickyTableHeader);
-        } else {
-            that.$table.before(that.$stickyTableHeader);
-        }
+        that.$table.before(that.$stickyTableHeader);
 
-        // var bodyRowsClone = $(tableClone).find('tbody').find('tr');
+        // bind scroll on mainContainer with updateStickyTableHeader
+        $(this.options.mainContainer).bind('scroll', function(){
+            $.proxy(that.updateStickyTableHeader(), that);
+        });
 
-        // bind scroll and resize with updateStickyTableHeader
-        $(window).bind('scroll resize', function(){
+        // bind resize on window with updateStickyTableHeader
+        $(window).bind('resize', function(e){
             $.proxy(that.updateStickyTableHeader(), that);
         });
 
         $(that.$tableScrollWrapper).bind('scroll', function(){
             $.proxy(that.updateStickyTableHeader(), that);
         });
+
+        // determine what solution to use for rendereing  sticky table head (aboslute/fixed).
+        that.useFixedSolution  = !isIOS() || (getIOSVersion() >= 8);
+        //add class for rendering solution
+        if(that.useFixedSolution) {
+            that.$tableScrollWrapper.addClass('fixed-solution');
+        } else {
+            that.$tableScrollWrapper.addClass('absolute-solution');
+        }
     };
 
     // Help function for sticky table header
@@ -288,11 +310,9 @@
         var that              = this,
           top               = 0,
           offsetTop         = that.$table.offset().top,
-          scrollTop         = $(window).scrollTop() -1, //-1 to accomodate for top border
+          scrollTop         = $(this.options.mainContainer).scrollTop() -1, //-1 to accomodate for top border
           maxTop            = that.$table.height() - that.$stickyTableHeader.height(),
-          rubberBandOffset  = (scrollTop + $(window).height()) - $(document).height(),
-        //          useFixedSolution  = that.$table.parent().prop('scrollWidth') === that.$table.parent().width();
-          useFixedSolution  = !that.iOS,
+          rubberBandOffset  = (scrollTop + $(this.options.mainContainer).height()) - $(document).height(),
           navbarHeight      = 0;
 
         //Is there a fixed navbar?
@@ -302,23 +322,40 @@
             scrollTop = scrollTop + navbarHeight;
         }
 
-        var shouldBeVisible   = (scrollTop > offsetTop) && (scrollTop < offsetTop + that.$table.height());
+        var shouldBeVisible;
 
-        if(useFixedSolution) {
+        if(this.options.mainContainer === window) {
+            shouldBeVisible   = (scrollTop > offsetTop) && (scrollTop < offsetTop + that.$table.height());
+        } else {
+            shouldBeVisible   = (offsetTop <= 0) && (-offsetTop < that.$table.height());
+        }
+
+        // console.log('offsetTop:' + offsetTop);
+        // console.log('scrollTop:' + scrollTop);
+        // console.log('tableHeight:' + that.$table.height());
+        // console.log('shouldBeVisible:' + shouldBeVisible);
+
+        if(that.useFixedSolution) { //fixed solution
             that.$stickyTableHeader.scrollLeft(that.$tableScrollWrapper.scrollLeft());
-
-            //add fixedSolution class
-            that.$stickyTableHeader.addClass('fixed-solution');
 
             // Calculate top property value (-1 to accomodate for top border)
             top = navbarHeight - 1;
 
-            // When the about to scroll past the table, move sticky table head up
-            if(((scrollTop - offsetTop) > maxTop)){
+            // When the user is about to scroll past the table, move sticky table head up
+            if(this.options.mainContainer === window && ((scrollTop - offsetTop) > maxTop)){
+
                 top -= ((scrollTop - offsetTop) - maxTop);
                 that.$stickyTableHeader.addClass('border-radius-fix');
+
+            } else if(this.options.mainContainer !== window && ((- offsetTop) > maxTop)){
+
+                top -= ((- offsetTop) - maxTop);
+                that.$stickyTableHeader.addClass('border-radius-fix');
+
             } else {
+
                 that.$stickyTableHeader.removeClass('border-radius-fix');
+
             }
 
             if (shouldBeVisible) {
@@ -333,14 +370,16 @@
             }
 
         } else { // alternate method
-            //remove fixedSolution class
-            that.$stickyTableHeader.removeClass('fixed-solution');
-
             //animation duration
             var animationDuration = 400;
 
             // Calculate top property value (-1 to accomodate for top border)
-            top = scrollTop - offsetTop - 1;
+            if(this.options.mainContainer === window) {
+                top = scrollTop - offsetTop - 1;
+            } else {
+                top = -offsetTop - 1;
+                // console.log('top:' + top);
+            }
 
             // Make sure the sticky table header doesn't slide up/down too far.
             if(top < 0) {
@@ -350,8 +389,10 @@
             }
 
             // Accomandate for rubber band effect
-            if(rubberBandOffset > 0) {
-                top = top - rubberBandOffset;
+            if(this.options.mainContainer === window) {
+                if(rubberBandOffset > 0) {
+                    top = top - rubberBandOffset;
+                }
             }
 
             if (shouldBeVisible) {
@@ -376,7 +417,7 @@
     };
 
     // Setup header cells
-    ResponsiveTable.prototype.setupHdrCells = function() {
+    ResponsiveTable.prototype.setupTableHeader = function() {
         var that = this;
 
         // for each header column
@@ -396,7 +437,7 @@
             }
 
             // create the hide/show toggle for the current column
-            if ( $th.is('[data-priority]') ) {
+            if ( $th.is('[data-priority]') && $th.data('priority') !== -1 ) {
                 var $toggle = $('<li class="checkbox-row"><input type="checkbox" name="toggle-'+id+'" id="toggle-'+id+'" value="'+id+'" /> <label for="toggle-'+id+'">'+ thText +'</label></li>');
                 var $checkbox = $toggle.find('input');
 
@@ -451,8 +492,12 @@
 
                             // if the cell was already visible, it means its original colspan was >1
                             // so let's increment the colspan
-                            if($cell.css('display') !== 'none'){
-                                $cell.prop('colSpan', parseInt($cell.prop('colSpan')) + 1);
+                            // This should not be done for th's in thead.
+                            if(!$cell.closest("thead").length && $cell.css('display') !== 'none'){
+                                // make sure new colspan value does not exceed original colspan value
+                                var newColSpan = Math.min(parseInt($cell.prop('colSpan')) + 1, $cell.attr('data-org-colspan'));
+                                // update colspan
+                                $cell.prop('colSpan', newColSpan);
                             }
 
                             // show cell
@@ -462,7 +507,8 @@
                       // checkbox has been unchecked
                       else {
                             // decrement colSpan if it's not 1 (because colSpan should not be 0)
-                            if(parseInt($cell.prop('colSpan'))>1){
+                            // This should not be done for th's in thead.
+                            if(!$cell.closest("thead").length && parseInt($cell.prop('colSpan'))>1){
                                 $cell.prop('colSpan', parseInt($cell.prop('colSpan')) - 1);
                             }
                             // otherwise, hide the cell
@@ -479,73 +525,144 @@
                     else {
                         $(this).prop('checked', false);
                     }
-                })
-                .trigger('updateCheck');
+                });
             } // end if
-        }); // end hdrCells loop 
+        }); // end hdrCells loop
+
+        if(!$.isEmptyObject(this.headerRowIndices)) {
+            that.setupRow(this.$thead.find("tr:eq(1)"), this.headerRowIndices);
+        }
     };
 
-    // Setup standard cells
+    // Setup body rows
     // assign matching "data-columns" attributes to the associated cells "(cells with colspan>1 has multiple columns).
-    ResponsiveTable.prototype.setupStandardCells = function() {
+    ResponsiveTable.prototype.setupBodyRows = function() {
         var that = this;
 
         // for each body rows
         that.$bodyRows.each(function(){
-            var idStart = 0;
-
-            // for each cell
-            $(this).find('th, td').each(function(){
-                var $cell = $(this);
-                var columnsAttr = '';
-
-                var colSpan = $cell.prop('colSpan');
-
-                var numOfHidden = 0;
-                // loop through columns that the cell spans over
-                for (var k = idStart; k < (idStart + colSpan); k++) {
-                    // add column id
-                    columnsAttr = columnsAttr + ' ' + that.idPrefix + k;
-
-                    // get column header
-                    var $colHdr = that.$tableScrollWrapper.find('#' + that.idPrefix + k);
-
-                    // copy data-priority attribute from column header
-                    var dataPriority = $colHdr.attr('data-priority');
-                    if (dataPriority) { $cell.attr('data-priority', dataPriority); }
-
-                    if($colHdr.css('display')==='none'){
-                        numOfHidden++;
-                    }
-
-                }
-
-                // if colSpan is more than 1
-                if(colSpan > 1) {
-                    //give it the class 'spn-cell';
-                    $cell.addClass('spn-cell');
-
-                    // if one of the columns that the cell belongs to is visible then show the cell
-                    if(numOfHidden !== colSpan){
-                        $cell.show();
-                    } else {
-                        $cell.hide(); //just in case
-                    }
-                }
-
-                //update colSpan to match number of visible columns that i belongs to
-                $cell.prop('colSpan',Math.max((colSpan - numOfHidden),1));
-
-                //remove whitespace in begining of string.
-                columnsAttr = columnsAttr.substring(1);
-
-                //set attribute to cell
-                $cell.attr('data-columns', columnsAttr);
-
-                //increment idStart with the current cells colSpan.
-                idStart = idStart + colSpan;
-            });
+            that.setupRow($(this), that.headerColIndices);
         });
+    };
+
+    ResponsiveTable.prototype.setupRow = function($row, indices) {
+        var that = this;
+
+        //check if it's already set up
+        if($row.data('setup')){
+            // don't do anything
+            return;
+        } else {
+            $row.data('setup', true);
+        }
+
+        var idStart = 0;
+
+        // for each cell
+        $row.find('th, td').each(function(){
+            var $cell = $(this);
+            var columnsAttr = '';
+
+            var colSpan = $cell.prop('colSpan');
+            $cell.attr('data-org-colspan', colSpan);
+
+            // if colSpan is more than 1
+            if(colSpan > 1) {
+                //give it the class 'spn-cell';
+                $cell.addClass('spn-cell');
+            }
+
+            // loop through columns that the cell spans over
+            for (var k = idStart; k < (idStart + colSpan); k++) {
+                // add column id
+                columnsAttr = columnsAttr + ' ' + that.idPrefix + indices[k];
+
+                // get column header
+                var $colHdr = that.$table.find('#' + that.idPrefix + indices[k]);
+
+                // copy data-priority attribute from column header
+                var dataPriority = $colHdr.attr('data-priority');
+                if (dataPriority) { $cell.attr('data-priority', dataPriority); }
+            }
+
+            //remove whitespace in begining of string.
+            columnsAttr = columnsAttr.substring(1);
+
+            //set attribute to cell
+            $cell.attr('data-columns', columnsAttr);
+
+            //increment idStart with the current cells colSpan.
+            idStart = idStart + colSpan;
+        });
+    };
+
+    ResponsiveTable.prototype.buildHeaderCellIndices = function() {
+        var that = this;
+
+        var rowspansBeforeIndex = {};
+
+        this.headerColIndices = {};
+        this.headerRowIndices = {};
+        var colPadding = 0;
+        var rowPadding = 0;
+
+        this.$thead.find("tr").first().find('th').each(function(i){
+            var $th = $(this);
+            var colSpan = $th.prop('colSpan');
+            var rowSpan = $th.prop("rowSpan");
+
+            for(var index = 0; index < colSpan; index++) {
+                that.headerColIndices[colPadding + i + index] = i;
+
+                if(colPadding + i + index >= 0) {
+                    rowspansBeforeIndex[colPadding + i + index - rowPadding] = rowPadding;
+                }
+            }
+
+            if(rowSpan > 1) {
+                rowPadding++;
+            }
+
+            colPadding += colSpan - 1;
+        });
+
+        if(this.$thead.find("tr").length > 2) {
+            throw new Error("This plugin doesnt support more than two rows in thead.");
+        }
+
+        if(this.$thead.find("tr").length === 2) {
+            var $row = $(this.$thead.find("tr")[1]);
+            $row.find("th").each(function(cellIndex) {
+                that.headerRowIndices[cellIndex] = that.headerColIndices[rowspansBeforeIndex[cellIndex] + cellIndex];
+            });
+        }
+    }
+
+    // Run this after the content in tbody has changed
+    ResponsiveTable.prototype.update = function() {
+        this.$bodyRows = this.$table.find('tbody, tfoot').find('tr');
+        this.setupBodyRows();
+
+        // Remove old tbody clone from Tableclone
+        this.$tableClone.find('tbody, tfoot').remove();
+
+        // Make new clone of tbody
+        var $tbodyClone = this.$table.find('tbody, tfoot').clone();
+
+        //replace ids
+        $tbodyClone.find('[id]').each(function() {
+            $(this).prop('id', $(this).prop('id') + '-clone');
+        });
+
+        // Append new clone to tableClone
+        $tbodyClone.appendTo(this.$tableClone);
+
+        // Make sure columns visibility is in sync,
+        // by triggering a (non-changing) change event on all checkboxes
+        this.$dropdownContainer.find('input').trigger('change');
+
+        // ¯\(°_o)/¯ I dunno if this is needed
+        // this.updateSpanningCells();
     };
 
     // Update colspan and visibility of spanning cells
@@ -619,7 +736,7 @@
     // ==================
 
     $(document).on('ready.responsive-table.data-api', function () {
-        $('[data-pattern]').each(function () {
+        $('.table-responsive[data-pattern]').each(function () {
             var $tableScrollWrapper = $(this);
             $tableScrollWrapper.responsiveTable($tableScrollWrapper.data());
         });
@@ -652,6 +769,15 @@
         return !!(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i));
     }
 
+    // Gets iOS version number. If the user is not on iOS, the function returns 0.
+    function getIOSVersion() {
+        if(isIOS()){
+            var iphone_version = parseFloat(('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1]).replace('undefined', '3_2').replace('_', '.').replace('_', ''));
+            return iphone_version;
+        } else {
+            return 0;
+        }
+    }
 
     $(document).ready(function() {
         // Change `no-js` to `js`

@@ -1,7 +1,7 @@
 /*!
- * Responsive Tables v5.0.4 (http://gergeo.se/RWD-Table-Patterns)
+ * Responsive Tables v5.3.3 (http://gergeo.se/RWD-Table-Patterns)
  * This is an awesome solution for responsive tables with complex data.
- * Authors: Nadan Gergeo <nadan.gergeo@gmail.com> (www.gergeo.se) & Maggie Wachs (www.filamentgroup.com)
+ * Authors: Nadan Gergeo <nadan@blimp.se> (www.blimp.se), Lucas Wiener <lucas@blimp.se> & "Maggie Wachs (www.filamentgroup.com)"
  * Licensed under MIT (https://github.com/nadangergeo/RWD-Table-Patterns/blob/master/LICENSE-MIT)
  */
 .dropdown-menu > li.checkbox-row {
@@ -37,7 +37,7 @@
 }
 .table-responsive {
   border-radius: 3px;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   margin-bottom: 20px;
 }
 .table-responsive > .table {
@@ -69,14 +69,13 @@
   border-bottom: 0;
 }
 .table-responsive[data-pattern="priority-columns"] {
-  position: relative;
   width: 100%;
   margin-bottom: 20px;
   overflow-y: hidden;
   overflow-x: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar;
   border-radius: 3px;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   -webkit-overflow-scrolling: touch;
 }
 .table-responsive[data-pattern="priority-columns"] > .table {
@@ -115,10 +114,41 @@
 .table-responsive[data-pattern="priority-columns"] > .table-bordered > tfoot > tr:last-child > td {
   border-bottom: 0;
 }
-.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority],
-.mq.js.lt-ie10 .sticky-table-header th[data-priority],
-.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority],
-.mq.js.lt-ie10 .sticky-table-header td[data-priority] {
+.table-responsive.absolute-solution {
+  position: relative;
+}
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="-1"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="-1"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="-1"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="-1"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="0"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="0"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="0"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="0"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="1"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="1"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="1"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="1"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="2"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="2"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="2"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="2"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="3"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="3"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="3"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="3"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="4"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="4"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="4"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="4"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="5"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="5"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="5"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="5"],
+.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="6"],
+.mq.js.lt-ie10 .sticky-table-header th[data-priority="6"],
+.mq.js .table-responsive[data-pattern="priority-columns"] td[data-priority="6"],
+.mq.js.lt-ie10 .sticky-table-header td[data-priority="6"] {
   display: none;
 }
 .lt-ie9.mq.js .table-responsive[data-pattern="priority-columns"] th[data-priority="1"],
@@ -203,66 +233,89 @@
     display: table-cell;
   }
 }
+.mq.js .table-responsive[data-pattern="priority-columns"] th.cell-hide,
+.mq.js.lt-ie10 .sticky-table-header th.cell-hide,
+.mq.js .table-responsive[data-pattern="priority-columns"] td.cell-hide,
+.mq.js.lt-ie10 .sticky-table-header td.cell-hide {
+  display: none;
+}
+.mq.js .table-responsive[data-pattern="priority-columns"] th.cell-show,
+.mq.js.lt-ie10 .sticky-table-header th.cell-show,
+.mq.js .table-responsive[data-pattern="priority-columns"] td.cell-show,
+.mq.js.lt-ie10 .sticky-table-header td.cell-show {
+  display: table-cell;
+}
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"] th.cell-show,
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header th.cell-show,
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"] td.cell-show,
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header td.cell-show {
+  display: inline;
+}
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"].display-all th,
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header.display-all th,
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"].display-all td,
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header.display-all td {
+  display: inline !important;
+}
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"].display-all th[data-priority="-1"],
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header.display-all th[data-priority="-1"],
+.lt-ie9 .mq.js .table-responsive[data-pattern="priority-columns"].display-all td[data-priority="-1"],
+.lt-ie9 .mq.js.lt-ie10 .sticky-table-header.display-all td[data-priority="-1"] {
+  display: none !important;
+}
+.mq.js .table-responsive[data-pattern="priority-columns"] table.display-all th,
+.mq.js.lt-ie10 .sticky-table-header table.display-all th,
+.mq.js .table-responsive[data-pattern="priority-columns"] table.display-all td,
+.mq.js.lt-ie10 .sticky-table-header table.display-all td {
+  display: table-cell !important;
+}
+.mq.js .table-responsive[data-pattern="priority-columns"] table.display-all th[data-priority="-1"],
+.mq.js.lt-ie10 .sticky-table-header table.display-all th[data-priority="-1"],
+.mq.js .table-responsive[data-pattern="priority-columns"] table.display-all td[data-priority="-1"],
+.mq.js.lt-ie10 .sticky-table-header table.display-all td[data-priority="-1"] {
+  display: none !important;
+}
 table.table-small-font {
   font-size: 12px;
   -webkit-text-size-adjust: none;
   line-height: 1.5em;
 }
-table.focus-on tbody tr:hover {
+table.focus-on tbody tr:hover,
+table.focus-on tfoot tr:hover {
   cursor: pointer;
 }
 table.focus-on tbody tr.unfocused th,
-table.focus-on tbody tr.unfocused td {
-  color: #999999;
+table.focus-on tfoot tr.unfocused th,
+table.focus-on tbody tr.unfocused td,
+table.focus-on tfoot tr.unfocused td {
+  color: #777777;
   color: rgba(0, 0, 0, 0.4);
 }
 table.focus-on tbody tr.focused th,
-table.focus-on tbody tr.focused td {
+table.focus-on tfoot tr.focused th,
+table.focus-on tbody tr.focused td,
+table.focus-on tfoot tr.focused td {
   background-color: #5bc0de;
   color: #000;
-}
-table th.col-hide,
-table td.col-hide {
-  display: none;
-}
-table th.col-show,
-table td.col-show {
-  display: inline;
-}
-.lt-ie9 table th.col-show,
-.lt-ie9 table td.col-show {
-  display: table-cell;
-}
-.lt-ie9 table.display-all th,
-.lt-ie9 table.display-all td {
-  display: inline !important;
-}
-table.display-all th,
-table.display-all td {
-  display: table-cell !important;
 }
 .sticky-table-header {
   background-color: #fff;
   border: none;
   border-radius: 0;
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
-  position: absolute;
-  top: 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   visibility: hidden;
   z-index: 990;
   overflow: hidden;
-  min-width: 100%;
 }
-.sticky-table-header.fixed-solution {
-  min-width: 0;
+.fixed-solution .sticky-table-header {
   position: fixed;
+  min-width: 0;
 }
-.lt-ie10 .sticky-table-header.fixed-solution {
-  border-left: 1px solid #dddddd;
-  border-right: 1px solid #dddddd;
-  box-sizing: content-box;
-  border-bottom: none;
+.absolute-solution .sticky-table-header {
+  position: absolute;
+  min-width: 100%;
+  top: 0;
 }
 .sticky-table-header.border-radius-fix {
   border-bottom-left-radius: 3px;
