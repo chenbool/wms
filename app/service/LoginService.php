@@ -43,7 +43,8 @@ class LoginService
     //注销
     public function quit(){
         Session::delete('uid','think');
-        Session::delete('company','think');
+		Session::delete('company','think');
+		Session::delete('user_menu'); // 清理用户菜单
     }    
 
 
