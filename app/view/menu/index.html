@@ -1,0 +1,115 @@
+{extend name="base"/}
+
+{block name="title"}菜单权限 - {__block__}{/block}
+
+{block name="style"}
+<!-- Imported styles on this page -->
+<link rel="stylesheet" href="__STATIC__/js/datatables/dataTables.bootstrap.css">
+{/block}
+
+{block name="content"}
+<div class="page-title">
+    <div class="breadcrumb-env pull-left">
+        <ol class="breadcrumb bc-1">
+            <li>
+                <a href="{:url('User/index')}"><i class="fa-home"></i>首页</a>
+            </li>
+            <li>
+                <a href="">基本设置</a>
+            </li>
+            <li class="active">
+                <strong>员工管理</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Responsive Table -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-toolbar">
+                    <div class="btn-group focus-btn-group">
+                        <a class="btn btn-default" href="javascript:addAjaxModel('{:url('Menu/add',['pid'=>$pid])}');"><span class="fa-plus"></span> 添加菜单</a>
+                    </div>
+                    <div class="pull-right" style="margin-bottom:0">
+                        <ol class="breadcrumb bc-3">
+                            <li><a href="{:url('Menu/index')}"><i class="fa-home"></i>根</a></li>
+                            {volist name="menuPath" id="v"}
+                            <li><a href="{:url('Menu/index',['pid'=>$v['id']])}">{$v.name}</a></li>
+                            {/volist}
+                        </ol>
+                    </div>
+                </div>
+                <!-- 不要引用rwd-table.js 库这里不需要使用 -->
+                <div data-pattern="priority-columns" class="table-responsive" >
+                    <table id="data-list" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>ICON</th>
+                                <th>级别</th>
+                                <th>路径</th>
+                                <th>状态</th>
+                                <th>添加时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {empty name="list"}
+                            <tr>
+                                <td colspan="999" class="">暂无数据</td>
+                            </tr>
+                            {/empty}
+                            {volist name="list" id="menu"}
+                            <tr>
+                                <td>{$menu.id}</td>
+                                <td><a href="{:url('Menu/index',['pid'=>$menu->id])}">{$menu.name}</a></td>
+                                <td>{$menu.ico}</td>
+                                <td>{$menu.level}</td>
+                                <td><?= empty($menu->controller)?"无":$menu->controller.'/'.$menu->action?></td>
+                                <td>{$menu.status_text}</td>
+                                <td>{:date('Y-m-d',$menu.add_time)}</td>
+                                <td>
+                                    <a class="btn btn-secondary btn-sm btn-icon icon-left" href="javascript:editAjaxModal('{:url('Menu/edit',['id'=>$menu->id])}');">编辑</a>
+                                    <a class="btn btn-gray btn-sm" href="{:url('Menu/index',['pid'=>$menu->id])}">进入</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+
+{block name="script"}
+
+<script>
+    //edit
+    function addAjaxModal(url) {
+        jQuery.ajax({
+            url: url,
+            success: function (response) {
+                if(typeof response != 'string'){
+                    toastr.error(response.msg);
+                    return false;
+                }
+                jQuery('#modal-edit').modal('show', { backdrop: 'static' });
+                jQuery('#modal-edit .modal-body').html(response);
+            },
+            error: function(xhr,textStatus,txt){
+                toastr.error(txt);
+            }
+        });
+    }
+</script>
+
+{/block}

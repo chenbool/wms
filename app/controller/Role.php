@@ -32,9 +32,11 @@ class Role extends Base
 
     public function edit($id)
     {
+        $info = $this->service->edit($id);
         $this->assign([
-            'info'  =>  $this->service->edit($id),
-            'menu'   =>  $this->service->menu()
+            'info'  =>  $info,
+            'menu'   =>  $this->service->menu(),
+            'ids' => explode(',', $info->ids)
         ]);   
         return view();
     }

@@ -1,112 +1,104 @@
-{layout name="layout" /}
+{extend name="base"}
+{block name="style"}{/block}
+{block name="content"}
+<div class="page-title">
 
-
-
-<div class="page-title">  
-    
     <div class="breadcrumb-env pull-left">
-        
+
         <ol class="breadcrumb bc-1">
             <li>
                 <a href="{:url('Unit/index')}"><i class="fa-home"></i>首页</a>
             </li>
             <li>
                 <a href="">基本设置</a>
-             </li>
+            </li>
             <li class="active">
                 <strong>计量单位</strong>
             </li>
         </ol>
-                    
-    </div>       
+
+    </div>
 </div>
 
-
-
 <div class="row">
-                <div class="col-md-12">
-                
+    <div class="col-md-12">
+        <!-- Removing search and results count filter -->
+        <div class="panel panel-default">
 
-<!-- ******************************************************************************************************** -->                      
-            
-            <!-- Removing search and results count filter -->
-            <div class="panel panel-default">
-
-                <div class="panel-heading btn-toolbar">
-                    <h3 class="panel-title">订单导入</h3>                
-                </div>
-
-                <div class="panel-body">
-
-                    <!-- searach -->
-                    <div class="btn-toolbar">
-
-                        <form method="post" action="{:url('/Order/upload')}" 
-                            class="form-inline search-tool" 
-                            style="margin-bottom:15px;text-align:center;" enctype="multipart/form-data" >
-                            <span style="margin-left: 15px;">
-                                <label class="control-label">文件</label>      
-                                <input type="file" class="form-control" placeholder="文件" name="excel" >
-                            </span>
-
-                            <span style="margin-left: 15px;">
-                                <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">导 入</button>
-                            </span>
-
-                            <a href="{:url('/Order/down')}">下载样本</a>
-                        </form>    
-                    </div>
-                    <!-- searach -->
-
-
-                    <!-- searach -->
-                    <center>  
-                        <div class="btn-toolbar">
-                            <h1>最新导入</h1>
-                        </div>
-                    </center>
-
-                   <table class="table table-bordered table-striped" id="example-2">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>电商订单号</th>
-                                <th>产品编码</th>
-                                <th>订单来源</th>
-                                <th>用户名称</th>
-                                <th>状态</th>
-                                <th>创建时间</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody class="middle-align">
-                        
-                        {volist name='list' id='vo'}
-                            <tr>
-                                <td> {$vo.order_id} </td>
-                                <td> {$vo.order_sn} </td>
-                                <td> {$vo.product_no} </td>
-                                <td> {$vo.referer == '' ?'暂无':$vo.referer} </td>
-                                <td> {$vo.receiver_name} </td>
-                                <td>
-                                    {$vo.pick_status==0?'正常':'废弃'} 
-                                </td>
-                                <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
-                            </tr>
-                        {/volist}
-
-                        </tbody>
-                    </table>
-
-
-
-
-
-                    
-                
-
-                </div>
+            <div class="panel-heading btn-toolbar">
+                <h3 class="panel-title">订单导入</h3>
             </div>
 
+            <div class="panel-body">
 
-  
+                <!-- searach -->
+                <div class="btn-toolbar">
+
+                    <form method="post" action="{:url('/Order/upload')}" class="form-inline search-tool"
+                        style="margin-bottom:15px;text-align:center;" enctype="multipart/form-data">
+                        <span style="margin-left: 15px;">
+                            <label class="control-label">文件</label>
+                            <input type="file" class="form-control" placeholder="文件" name="excel">
+                        </span>
+
+                        <span style="margin-left: 15px;">
+                            <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">导
+                                入</button>
+                        </span>
+
+                        <a href="{:url('/Order/down')}">下载样本</a>
+                    </form>
+                </div>
+                <!-- searach -->
+
+
+                <!-- searach -->
+                <center>
+                    <div class="btn-toolbar">
+                        <h1>最新导入</h1>
+                    </div>
+                </center>
+
+                <table class="table table-bordered table-striped" id="example-2">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>电商订单号</th>
+                            <th>产品编码</th>
+                            <th>订单来源</th>
+                            <th>用户名称</th>
+                            <th>状态</th>
+                            <th>创建时间</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="middle-align">
+
+                        {volist name='list' id='vo'}
+                        <tr>
+                            <td> {$vo.order_id} </td>
+                            <td> {$vo.order_sn} </td>
+                            <td> {$vo.product_no} </td>
+                            <td> {$vo.referer == '' ?'暂无':$vo.referer} </td>
+                            <td> {$vo.receiver_name} </td>
+                            <td>
+                                {$vo.pick_status==0?'正常':'废弃'}
+                            </td>
+                            <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
+                        </tr>
+                        {/volist}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+    $(function(){
+        nav_show();
+    })
+</script>
+{/block}

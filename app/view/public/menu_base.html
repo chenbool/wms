@@ -1,35 +1,31 @@
-<?php $request= \think\Request::instance();?>
+<ul id="main-menu" class="main-menu">
+	{volist name='_menuList' id='vo'}
+	<li>
+		<a href="{:url($vo['controller'].'/'.$vo['action'])}">
+			<i class="{$vo.ico}"></i>
+			<span class="title">{$vo.name}</span>
+		</a>
+		{if condition="$vo.child"}
+		<ul>
+			{volist name='$vo.child' id='vv'}
+			<li class=" {$vv['controller']}-{$vv['action']}">
+				<a href="{:url($vv['controller'].'/'.$vv['action'])}"><span class="title">{$vv.name}</span></a>
+			</li>
+			{/volist}
+		</ul>
+		{/if}
 
-				<ul id="main-menu" class="main-menu">
+	</li>
+	{/volist}
 
-					{volist name='_menuList' id='vo'}
-						
-						<li>
-							<a href="{:url($vo['controller'].'/'.$vo['action'])}">
-								<i class="{$vo.ico}"></i>
-								<span class="title">{$vo.name}</span>
-							</a>
-							{if condition="$vo.child"}
-							<ul>
-							{volist name='$vo.child' id='vv'}
-							<li class=" {$vv['controller']}-{$vv['action']}">
-								<a href="{:url($vv['controller'].'/'.$vv['action'])}"><span class="title">{$vv.name}</span></a>
-							</li>
-							{/volist}
-							</ul>
-							{/if}
-
-						</li>
-					{/volist}
-			
-				</ul>
+</ul>
 
 
-				<script>
-					function nav_show($cn){
-						var className = $cn || '{$request->controller()}-{$request->action()}';
-						$("."+className).addClass('active');
-						$("."+className).parent().parent().addClass('active open');
-						$("."+className).parent().show();
-					}
-				</script>
+<script>
+	function nav_show($cn) {
+		var className = $cn || '{$Request.controller}-{$Request.action}';
+		$("." + className).addClass('active');
+		$("." + className).parent().parent().addClass('active open');
+		$("." + className).parent().show();
+	}
+</script>

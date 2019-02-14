@@ -99,5 +99,37 @@ class MenuService
         return isset($permission[$controller.'/'.$action]);
     }
 
+    public function dataList()
+    {
+        $data = request()->param();
+
+        $where = [];
+        if(empty($data['pid'])){
+            $where['pid'] = 0;
+        }else{
+            $where['pid'] = $data['pid'];
+        }
+    
+        return $this->menuModel->where($where)->select();
+    }
+
+    public function getPath($pid)
+    {
+        $path = [];
+        if(empty($pid)){
+            return $path;
+        }
+        $row = $this->menuModel->cache()->column('id,name,pid,controller,action');
+        for(;;$pid!=0){
+            if(empty($row[$pid])){
+                break;
+            }
+            array_unshift($path,$row[$pid]);
+            $pid = $row[$pid]['pid'];
+        }
+        return $path;
+        
+    }
+
 
 }

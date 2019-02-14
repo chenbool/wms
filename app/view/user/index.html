@@ -273,9 +273,7 @@
 
 {block name="script"}
 <!-- Imported scripts on this page -->
-<script src="__STATIC__/js/rwd-table/js/rwd-table.min.js"></script>
 <script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
-
 <!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
 
 <!-- Imported scripts on this page -->
@@ -299,6 +297,9 @@
                 }
                 jQuery('#modal-add').modal('show', { backdrop: 'static' });
                 jQuery('#modal-add .modal-body').html(response);
+            }, 
+            error: function(xhr,textStatus,txt){
+                toastr.error(txt);
             }
         });
     }
@@ -329,6 +330,9 @@
                 }
                 jQuery('#modal-edit').modal('show', { backdrop: 'static' });
                 jQuery('#modal-edit .modal-body').html(response);
+            }, 
+            error: function(xhr,textStatus,txt){
+                toastr.error(txt);
             }
         });
     }
