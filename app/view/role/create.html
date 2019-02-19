@@ -56,54 +56,44 @@
 
 					</div>
 				</div>
-
-				<!-- 	<div class="row">
-			<div class="col-md-12">
-				
-				<div class="form-group">
-					<label class="control-label">单位状态</label>
-					<select class="form-control" name="status">
-						<option value="0"  >正常</option>
-						<option value="1"  >废弃</option>
-					</select>  
-				</div>	
-			
-			</div> 
-		</div> -->
-
 				<div class="row">
 					<div class="col-md-12">
 
 						<div class="form-group col-md-12">
 							<label for="field-2" class="control-label pull-left">节点选择</label>
-
-							<table class="table table-bordered table-striped">
-
-								{volist name='menu.father' id='vo'}
-								<tr>
-									<td width="50"><input type="checkbox" name="ids[]" value="{$vo.id}"></td>
-									<td style="text-align:left;">{$vo.name}</td>
-								</tr>
-								<tr>
-									<td width="50"></td>
-									<td style="text-align:left;">
-										{volist name='menu.child' id='vv'}
-										{if condition="$vv.pid eq $vo.id"}
-										<input type="checkbox" name="ids[]" value="{$vv.id}">
-										{$vv.name}
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										{else /}
-										{/if}
-										{/volist}
-									</td>
-								</tr>
-
-								{/volist}
-
-							</table>
+							<input type="hidden" name="ids" value="">
+							<div class="form-control js-tree" style="overflow: hidden; overflow-wrap: break-word; height: initial;">
+							</div>
 						</div>
 
-
+						<script>
+							$(function(){
+								$('.js-tree').on("changed.jstree", function (e, data) {
+									var ids = data.selected;
+									$('input[name="ids"]').val(ids.join(','));
+								}).on('select_node.jstree', function (e, data) {
+									if (data.event) {
+										data.instance.select_node(data.node.children_d);
+										data.instance.select_node(data.node.parents);
+									}
+								}).on('deselect_node.jstree', function (e, data) {
+									if (data.event) {
+										data.instance.deselect_node(data.node.children_d);
+									}
+								}).jstree({
+									"core" : {
+										"data":{$menu}
+									},
+									"checkbox" : {
+										"keep_selected_style" : false,
+										"cascade": "", 
+										"three_state": false
+									},
+									"expand_selected_onload": true,
+									"plugins" : [ "checkbox" ]
+								}); 
+							});
+						</script>
 					</div>
 				</div>
 
@@ -135,6 +125,8 @@
 
 {/block}
 {block name="script"}
+<link rel="stylesheet" href="__STATIC__/js/jstree/themes/default/style.min.css" />
+<script src="__STATIC__/js/jstree/jstree.min.js"></script>
 <script>
 	$(function(){
 		nav_show('{$Request.controller}-index');

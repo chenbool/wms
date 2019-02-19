@@ -9,28 +9,16 @@ class MenuService
 {
     protected $menuModel;
 
+    protected $controller;
+
     public function __construct()
     {
         $this->menuModel = new Menu();
     }
 
-    public function getFather()
-    {
-        return $this->menuModel->where([
-            'status' => 0,
-            'level' => 0
-        ])->select();
-    }
-
-    public function getChild()
-    {
-        return $this->menuModel->where([
-            'status' => 0,
-            'level' => ['>', 0]
-        ])->select();
-    }
-
-
+    /**
+     * 获取目录树状结构
+     */
     public function getMenuTree($ids = null)
     {
         $menuList = session('user_menu'); //先从session里获取用户菜单
@@ -46,7 +34,16 @@ class MenuService
 
         if(empty($menuList)) return [];
         return $this->menuTree($menuList);
+    }
 
+    /**
+     * 获取权限树状数据
+     */
+    public function getPermissionTree()
+    {
+        $menuList = Db::name('menu')->select();
+        if(empty($menuList)) return [];
+        return $this->menuTree($menuList);
     }
 
     public function menuTree(array $menuList,$pid = 0,$child = 'child')
@@ -131,5 +128,43 @@ class MenuService
         
     }
 
+    public function info($id)
+    {
+        return $this->menuModel->where('id',$id)->find();
+    }
+
+    public function save($data)
+    {
+        $validate = validate('MenuValidate');
+        $flag = $validate->check($data);
+        if(!$flag){
+            return ['error'=>100,'msg'=>$validate->getError()];
+        }
+        if(!empty($data['id'])){
+            $menu = $this->menuModel->find($data['id']);
+        }else{
+            $menu = new Menu();
+            $menu->add_time = time();
+        }
+        $menu->data($data);
+        if(!empty($menu->controller)){
+            list($menu->controller,$menu->action) = explode('/',$menu->controller);
+        }
+        $flag = $menu->save();
+        if($flag === false){
+            return ['error'=>100,'msg'=>$menu->getError()];
+        }
+        return ['error'=>0,'msg'=>$menu->getError(),'data'=>$menu];
+    }
+
+    public function status($id,$status)
+    {
+        $flag = $this->menuModel->where('id',$id)->update(['status'=>$status]);
+        if($flag){
+            return ['error'=>0,'msg'=>'操作成功'];
+        }else{
+            return ['error'=>100,'msg'=>'操作失败：'.$this->menuModel->getError()];
+        }
+    }
 
 }

@@ -17,10 +17,7 @@ class RoleService
 	public function menu()
 	{
 		$menu = new MenuService();
-		return [
-			'father' => $menu->getFather(),
-			'child' => $menu->getChild()
-		];
+		return $menu->getPermissionTree();
 	}
 
     // 保存数据
@@ -40,7 +37,7 @@ class RoleService
 
 			$role = new Role();
 			$role->name = $param['name'];
-			$role->ids = implode(',', $param['ids']);
+			$role->ids = $param['ids'];
 			$role->desc = $param['desc'];
 			$role->add_time = time();
 
@@ -67,7 +64,7 @@ class RoleService
 
 			$role = Role::get($param['id']);
 			$role->name = $param['name'];
-			$role->ids = implode(',', $param['ids']);
+			$role->ids = $param['ids'];
 			$role->desc = $param['desc'];
 
 			// 检测错误

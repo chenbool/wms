@@ -19,7 +19,7 @@ class Role extends Base
     
     public function create(){
         $this->assign([
-            'menu'   =>  $this->service->menu()
+            'menu' => json_encode(permission_jstree_data($this->service->menu())),
         ]);
         return view();
     }
@@ -35,8 +35,7 @@ class Role extends Base
         $info = $this->service->edit($id);
         $this->assign([
             'info'  =>  $info,
-            'menu'   =>  $this->service->menu(),
-            'ids' => explode(',', $info->ids)
+            'menu'   =>  json_encode(permission_jstree_data($this->service->menu(),explode(',', $info->ids))),
         ]);   
         return view();
     }
