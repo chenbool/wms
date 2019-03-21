@@ -1,176 +1,173 @@
-{layout name="layout" /}
+{extend name="base"}
+{block name="style"}{/block}
+{block name="content"}
 
-    <!-- Imported scripts on this page -->
-    <script src="__STATIC__/js/rwd-table/js/rwd-table.min.js"></script>
-    <script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
+<div class="page-title">
 
-    <!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
-
-    <!-- Imported scripts on this page -->
-    <script src="__STATIC__/js/datatables/dataTables.bootstrap.js"></script>
-    <script src="__STATIC__/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
-    <script src="__STATIC__/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
-
- 
-
-
-<div class="page-title">  
-    
     <div class="breadcrumb-env pull-left">
-        
+
         <ol class="breadcrumb bc-1">
             <li>
                 <a href="{:url('Index/index')}"><i class="fa-home"></i>首页</a>
             </li>
             <li>
                 <a href="">角色管理</a>
-             </li>
+            </li>
             <li class="active">
                 <strong>角色列表</strong>
             </li>
         </ol>
-                    
-    </div>       
+
+    </div>
 </div>
-
-
-
 <div class="row">
-                <div class="col-md-12">
-                
-<!-- ******************************************************************************************************** -->                       
-            
-            <!-- Removing search and results count filter -->
-            <div class="panel panel-default">
+    <div class="col-md-12">
+        <!-- Removing search and results count filter -->
+        <div class="panel panel-default">
 
-                <div class="panel-heading btn-toolbar">
-                    <h3 class="panel-title">角色管理</h3>
-                    <div class="panel-options pull-right">
-                        <a href="#" data-toggle="panel">
-                            <span class="collapse-icon">&ndash;</span>
-                            <span class="expand-icon">+</span>
+            <div class="panel-heading btn-toolbar">
+                <h3 class="panel-title">角色管理</h3>
+                <div class="panel-options pull-right">
+                    <a href="#" data-toggle="panel">
+                        <span class="collapse-icon">&ndash;</span>
+                        <span class="expand-icon">+</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="btn-toolbar">
+                    <div class="btn-group focus-btn-group">
+                        <a href="{:url('Role/create')}" class="btn btn-default btn-primary">
+                            <span class="fa-asterisk"></span>添加
                         </a>
                     </div>
                 </div>
 
-                <div class="panel-body">
 
-                    <div class="btn-toolbar">
-                        <div class="btn-group focus-btn-group">
-                            <a href="{:url('Role/create')}" class="btn btn-default btn-primary">
-                                <span class="fa-asterisk"></span>添加
-                            </a>
-                        </div>
-                    </div>
-
-
-                    <script type="text/javascript">
-                    jQuery(document).ready(function($)
-                    {
+                <script type="text/javascript">
+                    jQuery(document).ready(function ($) {
                         $("#example-2").dataTable({
                             dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
                             dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
                             aoColumns: [
-                                {bSortable: false},
+                                { bSortable: false },
                                 null,
                                 null,
                                 null,
                                 null,
-                                {bSortable: false}
+                                { bSortable: false }
                             ],
                         });
-                        
+
                         // Replace checkboxes when they appear
                         var $state = $("#example-2 thead input[type='checkbox']");
-                        
-                        $("#example-2").on('draw.dt', function()
-                        {
+
+                        $("#example-2").on('draw.dt', function () {
                             cbr_replace();
-                            
+
                             $state.trigger('change');
                         });
-                        
+
                         // Script to select all checkboxes
-                        $state.on('change', function(ev)
-                        {
+                        $state.on('change', function (ev) {
                             var $chcks = $("#example-2 tbody input[type='checkbox']");
-                            
-                            if($state.is(':checked'))
-                            {
+
+                            if ($state.is(':checked')) {
                                 $chcks.prop('checked', true).trigger('change');
                             }
-                            else
-                            {
+                            else {
                                 $chcks.prop('checked', false).trigger('change');
                             }
                         });
                     });
-                    </script>
-                    
+                </script>
 
-                    <table class="table table-bordered table-striped" id="example-2">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>角色名</th>
-                                <th>节点</th>
-                                <th>状态</th>
-                                <th>时间</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody class="middle-align">
-                        
+
+                <table class="table table-bordered table-striped" id="example-2">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>角色名</th>
+                            <th>节点</th>
+                            <th>状态</th>
+                            <th>时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="middle-align">
+
                         {volist name='list' id='vo'}
-                            <tr>
-                                <td> #{$vo.id} </td>
-                                <td> {$vo.name} </td>
-                                <td> {$vo.ids} </td>
-                                <td> {$vo.status==0?'正常':'禁用'} </td>
-                                <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
-                                <td>
-                                    <a href="{:url('/Role/edit/id/'.$vo->id)}" class="btn btn-secondary btn-sm btn-icon icon-left">
-                                        编辑
-                                    </a>
-                                    
-                                    <a href="javascript:;" class="btn btn-danger btn-sm btn-icon icon-left"  onclick="del('{$vo.id}')">
-                                        删除
-                                    </a>
+                        <tr>
+                            <td> #{$vo.id} </td>
+                            <td> {$vo.name} </td>
+                            <td> {$vo.ids} </td>
+                            <td> {$vo.status==0?'正常':'禁用'} </td>
+                            <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
+                            <td>
+                                <a href="{:url('/Role/edit/id/'.$vo->id)}"
+                                    class="btn btn-secondary btn-sm btn-icon icon-left">
+                                    编辑
+                                </a>
 
-                                </td>
-                            </tr>
+                                <a href="javascript:;" class="btn btn-danger btn-sm btn-icon icon-left"
+                                    onclick="del('{$vo.id}')">
+                                    删除
+                                </a>
+
+                            </td>
+                        </tr>
                         {/volist}
 
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
 
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共{:count( $list ) } 行数据</div></div>
-                        <div class="col-xs-6">
-                            <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
-                                {$list->render()}
-                            </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共{$list->total()} 行数据</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
+                            {$list->render()}
                         </div>
-                    </div>                  
-
+                    </div>
                 </div>
-            </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<!-- Imported scripts on this page -->
+<script src="__STATIC__/js/rwd-table/js/rwd-table.min.js"></script>
+<script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
+
+<!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+<!-- Imported scripts on this page -->
+<script src="__STATIC__/js/datatables/dataTables.bootstrap.js"></script>
+<script src="__STATIC__/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="__STATIC__/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
 <script>
+    $(function () {
+        nav_show();
+    });
     //del
-    function del(id){
-        if( confirm("确定要删除吗？") ){
-            $.post("{:url('Role/delete')}", {id:id},function(data){
-                if( data.error>0 ){
-                    toastr.error( data.msg );  
-                }else{
-                    toastr.success( data.msg );  
+    function del(id) {
+        if (confirm("确定要删除吗？")) {
+            $.post("{:url('Role/delete')}", { id: id }, function (data) {
+                if (data.error > 0) {
+                    toastr.error(data.msg);
+                } else {
+                    toastr.success(data.msg);
                     location.reload();
                 }
             }, "json");
-        } 
+        }
 
     }
 </script>
+{/block}

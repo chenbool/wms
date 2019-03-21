@@ -4,21 +4,19 @@ $request= \think\Request::instance();
 ?>
 				<ul id="main-menu" class="main-menu">
 
-					{volist name='_menuList.father' id='vo'}
+					{volist name='_menuList' id='vo'}
+						
 						<li>
-							<a href="{:url($vo->controller.'/'.$vo->action)}">
+							<a href="{:url($vo['controller'].'/'.$vo['action'])}">
 								<i class="{$vo.ico}"></i>
 								<span class="title">{$vo.name}</span>
 							</a>
-							{if condition="$vo.controller eq '' "}
+							{if condition="$vo.child"}
 							<ul>
-							{volist name='_menuList.child' id='vv'}
-								{if condition="$vv.pid eq $vo.id"}
-									<li class=" {$vv->controller}-{$vv->action}">
-										<a href="{:url($vv->controller.'/'.$vv->action)}"><span class="title">{$vv.name}</span></a>
-									</li>
-								{else /}
-								{/if}
+							{volist name='$vo.child' id='vv'}
+							<li class=" {$vv['controller']}-{$vv['action']}">
+								<a href="{:url($vv['controller'].'/'.$vv['action'])}"><span class="title">{$vv.name}</span></a>
+							</li>
 							{/volist}
 							</ul>
 							{/if}
@@ -30,8 +28,12 @@ $request= \think\Request::instance();
 
 
 <script>
-	var className = '{$request->controller()}-{$request->action()}'
-	$("."+className).addClass('active');
-	$("."+className).parent().parent().addClass('active open');
-	$("."+className).parent().show();
+
+	function nav_show($cn){
+		var className = $cn || '{$request->controller()}-{$request->action()}';
+		$("."+className).addClass('active');
+		$("."+className).parent().parent().addClass('active open');
+		$("."+className).parent().show();
+	}
+	nav_show();
 </script>

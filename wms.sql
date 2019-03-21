@@ -28,7 +28,7 @@ CREATE TABLE `w_category` (
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_category
@@ -52,7 +52,7 @@ CREATE TABLE `w_company` (
   `add_time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='公司管理';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='公司管理';
 
 -- ----------------------------
 -- Records of w_company
@@ -82,7 +82,7 @@ CREATE TABLE `w_customer` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`) USING BTREE,
   UNIQUE KEY `sn` (`sn`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户';
 
 -- ----------------------------
 -- Records of w_customer
@@ -124,7 +124,7 @@ CREATE TABLE `w_goods` (
   `qty1_ratio` decimal(10,2) unsigned DEFAULT '1.00' COMMENT '第一法定单位对应申报单位的换算系数',
   `qty2_ratio` decimal(10,2) unsigned DEFAULT '1.00' COMMENT '第二法定单位对应申报单位的换算系数',
   PRIMARY KEY (`goods_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_goods
@@ -143,7 +143,7 @@ CREATE TABLE `w_location` (
   `desc` varchar(200) DEFAULT NULL COMMENT '备注',
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='库位管理';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='库位管理';
 
 -- ----------------------------
 -- Records of w_location
@@ -167,7 +167,7 @@ CREATE TABLE `w_menu` (
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COMMENT='菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COMMENT='菜单';
 
 -- ----------------------------
 -- Records of w_menu
@@ -221,7 +221,7 @@ CREATE TABLE `w_order` (
   `add_time` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sn` (`sn`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_order
@@ -261,7 +261,7 @@ CREATE TABLE `w_order_good` (
   `desc` mediumtext,
   `add_time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`rec_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_order_good
@@ -301,7 +301,7 @@ CREATE TABLE `w_order_goods` (
   KEY `order_id` (`order_id`) USING BTREE,
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `goods_sn` (`goods_sn`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_order_goods
@@ -345,7 +345,7 @@ CREATE TABLE `w_order_info` (
   PRIMARY KEY (`order_id`),
   KEY `order_sn` (`order_sn`) USING BTREE,
   KEY `waybillno` (`waybillno`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='发货';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='发货';
 
 -- ----------------------------
 -- Records of w_order_info
@@ -374,7 +374,7 @@ CREATE TABLE `w_order_infow` (
   `remark` varchar(255) DEFAULT '' COMMENT '订单备注',
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='发货';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='发货';
 
 -- ----------------------------
 -- Records of w_order_infow
@@ -393,7 +393,7 @@ CREATE TABLE `w_order_list` (
   `order_id` mediumint(9) unsigned DEFAULT NULL COMMENT '入库订单id',
   `num` mediumint(9) unsigned DEFAULT NULL COMMENT '入库数量',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='订单关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='订单关联表';
 
 -- ----------------------------
 -- Records of w_order_list
@@ -430,7 +430,7 @@ CREATE TABLE `w_product` (
   `desc` mediumtext,
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='产品';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='产品';
 
 -- ----------------------------
 -- Records of w_product
@@ -460,7 +460,7 @@ CREATE TABLE `w_productup` (
   `desc` mediumtext,
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='产品';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='产品';
 
 -- ----------------------------
 -- Records of w_productup
@@ -488,7 +488,7 @@ CREATE TABLE `w_role` (
   `add_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_role
@@ -510,7 +510,7 @@ CREATE TABLE `w_shelve` (
   `desc` varchar(200) DEFAULT NULL COMMENT '备注',
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='货架管理';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='货架管理';
 
 -- ----------------------------
 -- Records of w_shelve
@@ -536,7 +536,7 @@ CREATE TABLE `w_storage` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `sn` (`sn`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='仓库管理';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='仓库管理';
 
 -- ----------------------------
 -- Records of w_storage
@@ -568,7 +568,7 @@ CREATE TABLE `w_supplier` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`) USING BTREE,
   UNIQUE KEY `sn` (`sn`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='供应商';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='供应商';
 
 -- ----------------------------
 -- Records of w_supplier
@@ -589,7 +589,7 @@ CREATE TABLE `w_unit` (
   `add_time` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of w_unit
@@ -619,7 +619,7 @@ CREATE TABLE `w_user` (
   `company` mediumint(10) unsigned DEFAULT NULL COMMENT '公司',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of w_user

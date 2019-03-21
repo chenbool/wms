@@ -14,13 +14,12 @@ class Product extends Base
     public function index()
     {
         $this->assign(['list'  =>  $this->service->page()]);
-        return view();
+        return view('index');
     }
 
     public function lists()
     {
-        $this->index();
-        return view();
+        return $this->index();
     }
 
 

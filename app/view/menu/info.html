@@ -1,0 +1,83 @@
+<form class="validate" id="info-form" novalidate="novalidate" action="{:url('Menu/info')}">
+    <input type="hidden" name="id" value="{$info.id|default=''}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">父节点</label>
+                <select name="pid" class="form-control" readonly>
+                    <option value="{$pid}">{$pMenu.name}</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">名称</label>
+                <input type="text" class="form-control" name="name" placeholder="名称" value="{$info.name|default=''}">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function($)
+        {
+            $("#ico-show").select2({
+                placeholder: '请选择图标',
+                allowClear: true,
+                formatResult: function(state)
+                {
+                    return '<i class="'+state.id+'"/></i> &nbsp;&nbsp;' 
+                            + state.text;
+                }
+            }).on('select2-open', function()
+            {
+                // Adding Custom Scrollbar
+                $(this).data('select2').results.addClass('overflow-hidden').perfectScrollbar();
+            });
+        });
+    </script>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">图标</label>
+                <select name="ico" id="ico-show" class="form-control">
+                    <option></option>
+                    {volist name="iconList" id="list"}
+                    <optgroup label="{$key}">
+                        {volist name="list" id="v"}
+                        <option value="{$v}"{if condition="isset($info['ico']) && $info['ico'] === $v"} selected{/if}>{$v}</option>
+                        {/volist}
+                    </optgroup>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">级别</label>
+                <input type="text" class="form-control" name="level" value="{$level}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">控制器</label>
+                <input type="text" class="form-control" name="controller" value="<?= empty($info['controller'])?'':$info['controller'].'/'?>{$info.action|default=''}" placeholder="Index/index">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group ">
+                <label class="control-label">状态</label>
+                <select name="status" class="form-control">
+                    <option value="0"{if condition="isset($info['status']) && $info['status'] === 0"} selected{/if}>显示</option>
+                    <option value="2"{if condition="isset($info['status']) && $info['status'] === 2"} selected{/if}>不显示</option>
+                    <option value="1"{if condition="isset($info['status']) && $info['status'] === 1"} selected{/if}>禁用</option>
+                </select>
+            </div>
+        </div>
+        
+    </div>
+</form>

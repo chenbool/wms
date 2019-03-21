@@ -1,110 +1,87 @@
-{layout name="layout" /}
+{extend name="base"}
+{block name="style"}{/block}
+{block name="content"}
 
-    <!-- Imported scripts on this page -->
-    <script src="__STATIC__/js/rwd-table/js/rwd-table.min.js"></script>
-    <script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
+<div class="page-title">
 
-    <!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
-
-    <!-- Imported scripts on this page -->
-    <script src="__STATIC__/js/datatables/dataTables.bootstrap.js"></script>
-    <script src="__STATIC__/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
-    <script src="__STATIC__/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
-
-    <script src="__STATIC__/js/table-export/xlsx.core.min.js"></script>
-    <script src="__STATIC__/js/table-export/blob.js"></script>
-    <script src="__STATIC__/js/table-export/FileSaver.min.js"></script>
-    <script src="__STATIC__/js/table-export/tableexport.js"></script>
-
-<div class="page-title">  
-    
     <div class="breadcrumb-env pull-left">
-        
+
         <ol class="breadcrumb bc-1">
             <li>
                 <a href="{:url('Order/index')}"><i class="fa-home"></i>首页</a>
             </li>
             <li>
                 <a href="">订单管理</a>
-             </li>
+            </li>
             <li class="active">
                 <strong>拣货管理</strong>
             </li>
         </ol>
-                    
-    </div>       
+
+    </div>
 </div>
 
-
-
 <div class="row">
-                <div class="col-md-12">
-                
+    <div class="col-md-12">
+        <!-- Removing search and results count filter -->
+        <div class="panel panel-default">
+            <div class="panel-heading btn-toolbar">
+                <h3 class="panel-title">拣货管理</h3>
+                <div class="btn-group dropdown-btn-group pull-right">
+                    <button class="btn btn-default"
+                        onClick="$('.table').tableExport({formats:['xlsx','xls','csv','txt']})">导出</button>
+                </div>
 
-<!-- ******************************************************************************************************** -->                        
+            </div>
+            <div class="panel-body">
 
 
-            
-            <!-- Removing search and results count filter -->
-            <div class="panel panel-default">
-                <div class="panel-heading btn-toolbar">
-                    <h3 class="panel-title">拣货管理</h3>
-                    <div class="btn-group dropdown-btn-group pull-right">
-                        <button class="btn btn-default" onClick ="$('.table').tableExport({formats:['xlsx','xls','csv','txt']})">导出</button>
-                    </div>                    
+
+
+
+                <!-- searach -->
+                <div class="btn-toolbar">
+
+                    <form class="form-inline" style="margin-bottom:15px;" class="search-tool">
+
+                        <span style="margin-left: 15px;">
+                            <label class="control-label">订单编号</label>
+                            <input type="text" class="form-control" placeholder="订单编号" name="sn"
+                                value="{$Request.get.sn}">
+                        </span>
+
+                        <span style="margin-left: 15px;">
+                            <label class="control-label">收件人</label>
+                            <input type="text" class="form-control" placeholder="收件人" name="receiver_name"
+                                value="{$Request.get.receiver_name}">
+                        </span>
+
+                        <span style="margin-left: 15px;">
+                            <label class="control-label">订单状态</label>
+                            <select class="form-control" name="status">
+                                <option value="" {eq name="Request.get.status" value=" " } selected="selected" {/eq}>全部
+                                </option>
+                                <option value="0" {eq name="Request.get.status" value="0" } selected="selected" {/eq}>
+                                    未拣货</option>
+                                <option value="1" {eq name="Request.get.status" value="1" } selected="selected" {/eq}>
+                                    已拣货</option>
+                            </select>
+                        </span>
+
+                        <span style="margin-left: 15px;">
+                            <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">
+                                <span class="fa-search"></span> 搜 索
+                            </button>
+                        </span>
+
+                    </form>
 
                 </div>
-                <div class="panel-body">
-                    
-
-        
-    
-
-                    <!-- searach -->
-                    <div class="btn-toolbar">
-
-                        <form class="form-inline" style="margin-bottom:15px;" class="search-tool">
-                            
-                            <span style="margin-left: 15px;">
-                                <label class="control-label">订单编号</label>      
-                                <input type="text" class="form-control" placeholder="订单编号" name="sn" value="{$Request.get.sn}">
-                            </span>
-
-                            <span style="margin-left: 15px;">
-                                <label class="control-label">收件人</label>      
-                                <input type="text" class="form-control" placeholder="收件人" name="receiver_name" value="{$Request.get.receiver_name}">
-                            </span>
-
-                            <span style="margin-left: 15px;">
-                                <label class="control-label">订单状态</label>
-                                <select class="form-control" name="status">
-                                    <option value="" 
-                                        {eq name="Request.get.status" value=" "} selected="selected" {/eq}
-                                    >全部</option>
-                                    <option value="0" 
-                                        {eq name="Request.get.status" value="0"} selected="selected" {/eq}
-                                    >未拣货</option>
-                                    <option value="1" 
-                                        {eq name="Request.get.status" value="1"} selected="selected" {/eq}
-                                    >已拣货</option>
-                                </select>   
-                            </span>
-
-                            <span style="margin-left: 15px;">
-                                <button class="btn btn-default btn-primary" type="submit" style="margin-top:10px;">
-                                    <span class="fa-search"></span> 搜 索
-                                </button> 
-                            </span>
-                        
-                        </form>
-                        
-                    </div>
-                    <!-- searach -->
+                <!-- searach -->
 
 
-                    <script type="text/javascript">
-                    jQuery(document).ready(function($)
-                    {
+                <script type="text/javascript">
+                    jQuery(document).ready(function ($) {
                         $("#example-2").dataTable({
                             dom: "t" + "<'row'<'col-xs-6'i><'col-xs-6'p>>",
                             dom: "t" + "<'row'<'col-xs-6'><'col-xs-6'>>",
@@ -117,134 +94,150 @@
                                 null,
                                 null,
                                 null,
-                                {bSortable: false}
+                                { bSortable: false }
                             ],
                         });
-                        
+
                         // Replace checkboxes when they appear
                         var $state = $("#example-2 thead input[type='checkbox']");
-                        
-                        $("#example-2").on('draw.dt', function()
-                        {
+
+                        $("#example-2").on('draw.dt', function () {
                             cbr_replace();
-                            
+
                             $state.trigger('change');
                         });
-                        
+
                         // Script to select all checkboxes
-                        $state.on('change', function(ev)
-                        {
+                        $state.on('change', function (ev) {
                             var $chcks = $("#example-2 tbody input[type='checkbox']");
-                            
-                            if($state.is(':checked'))
-                            {
+
+                            if ($state.is(':checked')) {
                                 $chcks.prop('checked', true).trigger('change');
                             }
-                            else
-                            {
+                            else {
                                 $chcks.prop('checked', false).trigger('change');
                             }
                         });
                     });
-                    </script>
-                    
+                </script>
 
-                    <table class="table table-bordered table-striped" id="example-2">
-                        <thead>
-                            <tr>
-<!--                                 <th class="no-sorting">
-                                    <input type="checkbox" class="cbr">
-                                </th> -->
-                                <th>ID</th>
-                                <th>订单编号</th>
-                                <th>产品编码</th>
-                                <th>订单来源</th>
-                                <th>收件人</th>
-                                <th>状态</th>
-                                <th>创建时间</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody class="middle-align">
-                        
+
+                <table class="table table-bordered table-striped" id="example-2">
+                    <thead>
+                        <tr>
+                            <!--                                 <th class="no-sorting">
+                            <input type="checkbox" class="cbr">
+                        </th> -->
+                            <th>ID</th>
+                            <th>订单编号</th>
+                            <th>产品编码</th>
+                            <th>订单来源</th>
+                            <th>收件人</th>
+                            <th>状态</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="middle-align">
+
                         {volist name='list' id='vo'}
-                            <tr>
-<!--                                 <td>
-                                    <input type="checkbox" class="cbr">
-                                </td> -->
-                                <td> {$vo.rec_id} </td>
-                                <td> {$vo.order_sn} </td>
-                                <td> {$vo.order_sn} </td>
-                                <td> {$vo.referer == '' ?'暂无':$vo.referer} </td>
-                                <td> {$vo.receiver_name} </td>
-                                <td>
-                                    {$vo.pick_status==0?'未拣货':'已拣货'} 
-                                </td>
-                                <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
-                                <td>
+                        <tr>
+                            <!--                                 <td>
+                            <input type="checkbox" class="cbr">
+                        </td> -->
+                            <td> {$vo.rec_id} </td>
+                            <td> {$vo.order_sn} </td>
+                            <td> {$vo.order_sn} </td>
+                            <td> {$vo.referer == '' ?'暂无':$vo.referer} </td>
+                            <td> {$vo.receiver_name} </td>
+                            <td>
+                                {$vo.pick_status==0?'未拣货':'已拣货'}
+                            </td>
+                            <td> {:date('Y-m-d H:i:s',$vo->add_time)} </td>
+                            <td>
                                 {if condition="$vo.pick_status eq 0 "}
-                                    <a href="javascript:;" 
-                                        class="btn btn-secondary btn-sm btn-icon icon-left" 
-                                        onclick="editAjaxModal('{$vo->rec_id}')" >
-                                        拣货
-                                    </a>
+                                <a href="javascript:;" class="btn btn-secondary btn-sm btn-icon icon-left"
+                                    onclick="editAjaxModal('{$vo->rec_id}')">
+                                    拣货
+                                </a>
                                 {else /}
-                                    <a href="javascript:;" 
-                                        class="btn btn-danger btn-sm btn-icon icon-left" 
-                                        onclick="editAjaxModal('{$vo->rec_id}')" >
-                                        取消
-                                    </a>
+                                <a href="javascript:;" class="btn btn-danger btn-sm btn-icon icon-left"
+                                    onclick="editAjaxModal('{$vo->rec_id}')">
+                                    取消
+                                </a>
                                 {/if}
-                               </td>
-                            </tr>
+                            </td>
+                        </tr>
                         {/volist}
 
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
 
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite"> 共{:count( $list ) } 行数据</div></div>
-                        <div class="col-xs-6">
-                            <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
-                                {$list->render()}
-                            </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="dataTables_info" id="example-3_info" role="status" aria-live="polite">
+                            共{$list->total()} 行数据</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example-3_paginate">
+                            {$list->render()}
                         </div>
-                    </div>                  
-
+                    </div>
                 </div>
+
             </div>
+        </div>
+    </div>
+</div>
 
+{/block}
+{block name="script"}
+<!-- Imported scripts on this page -->
+<script src="__STATIC__/js/datatables/js/jquery.dataTables.min.js"></script>
 
+<!-- <link rel="stylesheet" href="__STATIC__/css/xenon-forms.css"> -->
+
+<!-- Imported scripts on this page -->
+<script src="__STATIC__/js/datatables/dataTables.bootstrap.js"></script>
+<script src="__STATIC__/js/datatables/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="__STATIC__/js/datatables/tabletools/dataTables.tableTools.min.js"></script>
+
+<script src="__STATIC__/js/table-export/xlsx.core.min.js"></script>
+<script src="__STATIC__/js/table-export/blob.js"></script>
+<script src="__STATIC__/js/table-export/FileSaver.min.js"></script>
+<script src="__STATIC__/js/table-export/tableexport.js"></script>
 <script type="text/javascript">
-
+    $(function(){
+        nav_show();
+    });
     //edit
-    function editAjaxModal(id){
-        var res = {'id':id};
+    function editAjaxModal(id) {
+        var res = { 'id': id };
 
-        $.post("{:url('Pack/packAdd')}", res,function(data){
-            if( data.error>0 ){
-                toastr.error( data.msg );  
-            }else{
-                toastr.success( data.msg );  
+        $.post("{:url('Pack/packAdd')}", res, function (data) {
+            if (data.error > 0) {
+                toastr.error(data.msg);
+            } else {
+                toastr.success(data.msg);
                 location.reload();
             }
         }, "json");
     }
 
     //del
-    function del(id){
-        if( confirm("确定要删除吗？") ){
-            $.post("{:url('Order/delete')}", {id:id},function(data){
-                if( data.error>0 ){
-                    toastr.error( data.msg );  
-                }else{
-                    toastr.success( data.msg );  
+    function del(id) {
+        if (confirm("确定要删除吗？")) {
+            $.post("{:url('Order/delete')}", { id: id }, function (data) {
+                if (data.error > 0) {
+                    toastr.error(data.msg);
+                } else {
+                    toastr.success(data.msg);
                     location.reload();
                 }
             }, "json");
-        } 
+        }
 
     }
 </script>
+{/block}

@@ -1,0 +1,156 @@
+{extend name="base"/}
+
+{block name="title"}菜单权限 - {__block__}{/block}
+
+{block name="style"}
+<!-- Imported styles on this page -->
+<link rel="stylesheet" href="__STATIC__/js/datatables/dataTables.bootstrap.css">
+{/block}
+
+{block name="content"}
+<div class="page-title">
+    <div class="breadcrumb-env pull-left">
+        <ol class="breadcrumb bc-1">
+            <li>
+                <a href="{:url('User/index')}"><i class="fa-home"></i>首页</a>
+            </li>
+            <li>
+                <a href="">基本设置</a>
+            </li>
+            <li class="active">
+                <strong>员工管理</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Responsive Table -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-toolbar">
+                    <div class="btn-group focus-btn-group">
+                        <a class="btn btn-default" href="javascript:infoAjaxModal('{:url('Menu/info',['pid'=>$pid])}','添加菜单');"><span class="fa-plus"></span> 添加菜单</a>
+                    </div>
+                    <div class="pull-right">
+                        <ol class="breadcrumb bc-3" style="margin-bottom:0">
+                            <li><a href="{:url('Menu/index')}"><i class="fa-home"></i>根</a></li>
+                            {volist name="menuPath" id="v"}
+                            <li><a href="{:url('Menu/index',['pid'=>$v['id']])}">{$v.name}</a></li>
+                            {/volist}
+                        </ol>
+                    </div>
+                </div>
+                <!-- 不要引用rwd-table.js 库这里不需要使用 -->
+                <div data-pattern="priority-columns" class="table-responsive" >
+                    <table id="data-list" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>ICON</th>
+                                <th>级别</th>
+                                <th>路径</th>
+                                <th>状态</th>
+                                <th>添加时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {empty name="list"}
+                            <tr>
+                                <td colspan="999" class="">暂无数据</td>
+                            </tr>
+                            {/empty}
+                            {volist name="list" id="menu"}
+                            <tr>
+                                <td>{$menu.id}</td>
+                                <td><a href="{:url('Menu/index',['pid'=>$menu->id])}">{$menu.name}</a></td>
+                                <td>{$menu.ico}</td>
+                                <td>{$menu.level}</td>
+                                <td><?= empty($menu->controller)?"无":$menu->controller.'/'.$menu->action?></td>
+                                <td>{$menu.status_text}</td>
+                                <td>{:date('Y-m-d',$menu.add_time)}</td>
+                                <td>
+                                    <a class="btn btn-secondary btn-sm btn-icon icon-left" href="javascript:infoAjaxModal('{:url('Menu/info',['id'=>$menu->id])}','编辑菜单');">编辑</a>
+                                    <a class="btn btn-gray btn-sm btn-icon" href="{:url('Menu/index',['pid'=>$menu->id])}">子集</a>
+                                    <a class="btn btn-gray btn-sm btn-icon" href="{:url('Menu/status',['id'=>$menu->id,'status'=>intval(!$menu->status)])}">{eq name="$menu:status" value="0"}禁用{/eq}{eq name="$menu:status" value="1"}启用{/eq}{eq name="$menu:status" value="2"}启用{/eq}</a>
+                                </td>
+                            </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal edit (Ajax Modal)-->
+<div class="modal fade " id="modal-info">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">title..</h4>
+            </div>
+
+            <div class="modal-body">
+                Content is loading...
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-info" id="info-form-btn">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="script"}
+<link rel="stylesheet" href="__STATIC__/js/select2/select2.css">
+<link rel="stylesheet" href="__STATIC__/js/select2/select2-bootstrap.css">
+<script src="__STATIC__/js/select2/select2.min.js"></script>
+
+<script>
+    //edit
+    function infoAjaxModal(url,title) {
+        title = title || '添加菜单';
+        jQuery.ajax({
+            url: url,
+            success: function (response) {
+                if(typeof response != 'string'){
+                    toastr.error(response.msg);
+                    return false;
+                }
+                jQuery('#modal-info').modal('show', { backdrop: 'static' });
+                jQuery('#modal-info .modal-body').html(response);
+                jQuery('#modal-info .modal-title').html(title);
+            },
+            error: function(xhr,textStatus,txt){
+                toastr.error(txt);
+            }
+        });
+    }
+    $(function(){
+        nav_show();
+        $("#info-form-btn").click(function(){
+            var data = $("#info-form").serialize();
+            var url = $("#info-form").attr('action');
+            console.log(url,data);
+            $.post(url,data,function(req){
+                if(req.error == 0){
+                    location.reload();
+                    return;
+                }
+                toastr.error(req.msg);
+            });
+        });
+    });
+</script>
+
+{/block}
