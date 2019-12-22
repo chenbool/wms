@@ -4,7 +4,7 @@
 
 ## 在线地址 
 
-http://bool.yk.0zj.pw/index.php
+http://148.70.120.105:8002/login/index
 
 
 类型| 账号 | 密码
@@ -14,9 +14,9 @@ http://bool.yk.0zj.pw/index.php
 
 
 
-## 默认分支
+<!-- ## 默认分支
 
-https://github.com/bool1993/xenon-wms
+https://github.com/bool1993/xenon-wms -->
 
 
 
