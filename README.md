@@ -19,21 +19,14 @@ http://bool.yk.0zj.pw/index.php
 https://github.com/bool1993/xenon-wms
 
 
-#安装
-	
-	localhost/install.php
 
-#安装框架核心 vendor (可以跳过)
+## qq群：785794314
 
-	composer install
+<div  align="center">    
+  <img src="./demo/qq.png" width = "400" alt="图片名称" align=center />
+</div>
 
-
-css js下载
-
-https://share.weiyun.com/2759bf54943180687fe63cb9a28d98f7
-
-
-## qq群：484043598
+## 支付宝：81001985@qq.com
 
 <div  align="center">    
   <img src="./demo/QQ图片20171230143517.jpg" width = "400" alt="图片名称" align=center />
