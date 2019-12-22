@@ -34,6 +34,7 @@ https://github.com/bool1993/xenon-wms -->
 
 
 ## 演示
+![1](./demo/1.gif)
 
 ![1](./demo/20171229163116.png)
 
